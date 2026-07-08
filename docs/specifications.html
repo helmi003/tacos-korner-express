@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tako's Korner — Cahier des Charges</title>
+<style>
+  :root{
+    --primary:#ec1d23;
+    --secondary:#2596be;
+    --bg:#f7f8fa;
+    --surface:#ffffff;
+    --text:#1a1a2e;
+    --text-muted:#5b6270;
+    --border:#e3e6ea;
+    --ok:#1f9d55;
+    --warn:#c98a00;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Segoe UI",Poppins,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+  }
+  .doc{
+    max-width:980px;
+    margin:0 auto;
+    background:var(--surface);
+    box-shadow:0 0 40px rgba(0,0,0,0.06);
+  }
+  header.cover{
+    background:linear-gradient(135deg,var(--primary),#ff5a5f 60%,var(--secondary));
+    color:#fff;
+    padding:64px 56px 48px;
+  }
+  header.cover .tag{
+    display:inline-block;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.4);
+    border-radius:20px;
+    padding:4px 14px;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  header.cover h1{
+    font-size:38px;
+    margin:0 0 8px;
+    font-weight:700;
+  }
+  header.cover .subtitle{
+    font-size:17px;
+    opacity:.95;
+    margin:0 0 28px;
+  }
+  header.cover .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    font-size:13px;
+    opacity:.9;
+    border-top:1px solid rgba(255,255,255,0.3);
+    padding-top:18px;
+  }
+  header.cover .meta div b{display:block;font-weight:600;margin-bottom:2px;}
+  nav.toc{
+    padding:32px 56px;
+    border-bottom:1px solid var(--border);
+    background:#fbfbfc;
+  }
+  nav.toc h2{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 14px;}
+  nav.toc ol{
+    columns:2;
+    column-gap:32px;
+    margin:0;
+    padding-left:20px;
+    font-size:14px;
+  }
+  nav.toc li{margin-bottom:8px;}
+  nav.toc a{color:var(--text);text-decoration:none;}
+  nav.toc a:hover{color:var(--primary);}
+  main{padding:8px 56px 64px;}
+  section{
+    padding:40px 0;
+    border-bottom:1px solid var(--border);
+  }
+  section:last-child{border-bottom:none;}
+  section h2{
+    font-size:24px;
+    margin:0 0 6px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  section h2 .num{
+    color:var(--primary);
+    font-size:15px;
+    font-weight:700;
+    background:#fdeceb;
+    border-radius:8px;
+    padding:3px 9px;
+  }
+  section h3{
+    font-size:17px;
+    margin:28px 0 10px;
+    color:var(--secondary);
+  }
+  section p{margin:0 0 12px;color:var(--text);}
+  section ul, section ol{margin:0 0 14px;padding-left:22px;}
+  section li{margin-bottom:6px;}
+  .lead{font-size:15px;color:var(--text-muted);margin-top:-2px;margin-bottom:20px;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 22px;
+    font-size:13.5px;
+  }
+  th,td{
+    border:1px solid var(--border);
+    padding:8px 10px;
+    text-align:left;
+    vertical-align:top;
+  }
+  th{
+    background:#f4f5f7;
+    font-weight:600;
+    color:var(--text);
+  }
+  tr:nth-child(even) td{background:#fafbfc;}
+  .badge{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:10px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .badge.mvp{background:#fdeceb;color:var(--primary);}
+  .badge.v2{background:#e6f3f8;color:var(--secondary);}
+  .badge.done{background:#e7f6ec;color:var(--ok);}
+  .callout{
+    background:#f4f8fb;
+    border-left:4px solid var(--secondary);
+    padding:14px 18px;
+    border-radius:6px;
+    margin:16px 0;
+    font-size:14px;
+  }
+  .callout.warn{background:#fdf6e8;border-left-color:var(--warn);}
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin:16px 0 22px;
+  }
+  .card{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    background:#fff;
+  }
+  .card h4{margin:0 0 6px;font-size:14.5px;}
+  .card p{margin:0;font-size:13px;color:var(--text-muted);}
+  .totals-row td{font-weight:700;background:#fdeceb !important;}
+  .totals-row.fe td{background:#e6f3f8 !important;}
+  .totals-row.grand td{background:#1a1a2e !important;color:#fff !important;}
+  footer.docfoot{
+    padding:28px 56px 48px;
+    font-size:12px;
+    color:var(--text-muted);
+    text-align:center;
+  }
+  code{
+    background:#f1f2f4;
+    padding:1px 6px;
+    border-radius:4px;
+    font-size:12.5px;
+  }
+  @media (max-width:700px){
+    header.cover, nav.toc, main, footer.docfoot{padding-left:20px;padding-right:20px;}
+    nav.toc ol{columns:1;}
+  }
+  @media print{
+    body{background:#fff;}
+    .doc{box-shadow:none;}
+    section{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header class="cover">
+  <span class="tag">Cahier des Charges — Application Mobile</span>
+  <h1>Tako's Korner</h1>
+  <p class="subtitle">Application mobile de commande de repas en ligne — spécifications fonctionnelles, architecture cible, feuille de route et estimation de charge</p>
+  <div class="meta">
+    <div><b>Version du document</b>1.0</div>
+    <div><b>Statut du projet</b>Prototype UX/UI finalisé — développement natif non démarré</div>
+    <div><b>Plateformes cibles</b>iOS &amp; Android (Flutter)</div>
+    <div><b>Langues</b>Français, Anglais, Arabe (RTL)</div>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>Sommaire</h2>
+  <ol>
+    <li><a href="#presentation">Présentation du projet</a></li>
+    <li><a href="#objectifs">Objectifs et enjeux</a></li>
+    <li><a href="#perimetre">Périmètre fonctionnel</a></li>
+    <li><a href="#non-fonctionnel">Exigences non fonctionnelles</a></li>
+    <li><a href="#architecture">Architecture technique envisagée</a></li>
+    <li><a href="#livrables">Livrables actuels et cibles</a></li>
+    <li><a href="#roadmap">Évolutions futures (Roadmap V2+)</a></li>
+    <li><a href="#estimation">Estimation de charge et planning</a></li>
+    <li><a href="#risques">Risques, hypothèses et exclusions</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="presentation">
+  <h2><span class="num">1</span>Présentation du projet</h2>
+  <p class="lead">Contexte, positionnement et publics cibles de l'application.</p>
+
+  <p><b>Tako's Korner</b> est une application mobile de commande de repas en ligne (food delivery) permettant à un utilisateur de parcourir des restaurants et des plats, de personnaliser sa commande, de payer en ligne, de suivre la livraison en temps réel, et de découvrir de nouveaux produits via un fil de vidéos courtes ("Reels") inspiré des formats sociaux actuels (TikTok/Instagram Reels).</p>
+
+  <p>Le projet se distingue des applications de livraison classiques par l'intégration d'une composante <b>découverte sociale</b> (vidéos, likes, commentaires, partages, abonnement à des créateurs/restaurants) directement connectée au catalogue produit, dans le but d'augmenter l'engagement et la conversion.</p>
+
+  <div class="card-grid">
+    <div class="card"><h4>Public cible</h4><p>Consommateurs urbains 18–40 ans, utilisateurs réguliers d'applications de livraison et de réseaux sociaux courts formats.</p></div>
+    <div class="card"><h4>Zone de lancement</h4><p>Marché francophone / arabophone avec support multilingue natif (FR, EN, AR — RTL).</p></div>
+    <div class="card"><h4>Modèle</h4><p>Marketplace multi-restaurants avec paiement en ligne et suivi de commande.</p></div>
+    <div class="card"><h4>État actuel</h4><p>Prototype interactif HTML/CSS/JS complet (<code>docs/app.html</code>) validant l'ensemble des parcours ; aucun développement natif ni backend n'a encore été engagé.</p></div>
+  </div>
+</section>
+
+<section id="objectifs">
+  <h2><span class="num">2</span>Objectifs et enjeux</h2>
+  <ul>
+    <li><b>Objectif produit :</b> proposer une expérience de commande fluide, personnalisable (ingrédients, suppléments, exclusions) et engageante grâce au fil "Reels".</li>
+    <li><b>Objectif technique :</b> livrer une application Flutter native (iOS/Android) à partir d'un prototype UX déjà validé, connectée à une API backend robuste et sécurisée.</li>
+    <li><b>Objectif business :</b> maximiser la rétention (badges "Live", recommandations personnalisées, favoris) et le panier moyen (suppléments tarifés, promotions).</li>
+    <li><b>Objectif organisationnel :</b> permettre à une équipe réduite (1 développeur backend, 1 développeur frontend) de livrer un produit complet dans un délai maîtrisé (cf. §8).</li>
+  </ul>
+</section>
+
+<section id="perimetre">
+  <h2><span class="num">3</span>Périmètre fonctionnel</h2>
+  <p class="lead">Fonctionnalités validées dans le prototype interactif (<code>docs/app.html</code>), à reproduire et raccorder à un backend réel lors du développement natif.</p>
+
+  <h3>3.1 Onboarding &amp; Authentification</h3>
+  <ul>
+    <li>Écran d'accueil en 3 diapositives (présentation, fonctionnalités clés, choix de la langue)</li>
+    <li>Connexion par e-mail/mot de passe, boutons de connexion sociale Google / Apple</li>
+    <li>Inscription avec validation des champs en temps réel</li>
+    <li>Mot de passe oublié → confirmation d'envoi d'e-mail → vérification par code OTP → nouveau mot de passe avec indicateur de robustesse</li>
+  </ul>
+
+  <h3>3.2 Accueil &amp; Découverte</h3>
+  <ul>
+    <li>Carrousel de promotions, raccourcis par catégories</li>
+    <li>Rails "Nouveautés" et "Populaires" avec écran "Voir tout" dédié</li>
+    <li>Recommandations personnalisées ("Parce que vous avez aimé…") basées sur les favoris</li>
+    <li>Liste de restaurants (cartes) et vue carte géographique</li>
+    <li>Recherche (point d'entrée unique via la barre de recherche de l'accueil)</li>
+  </ul>
+
+  <h3>3.3 Fiche produit &amp; personnalisation</h3>
+  <ul>
+    <li>Détail produit : visuel, tags, prix, note, avis clients</li>
+    <li>Personnalisation des ingrédients par catégorie (protéines, fromages, sauces, garnitures), suppléments tarifés plafonnés par catégorie, section "Sans" (retrait d'ingrédients inclus)</li>
+    <li>Accompagnements boissons/desserts en option</li>
+    <li>Sauvegarde d'une combinaison personnalisée pour réutilisation rapide</li>
+  </ul>
+
+  <h3>3.4 Panier &amp; Commande</h3>
+  <ul>
+    <li>Lignes de panier différenciées par personnalisation (fusion automatique des lignes identiques)</li>
+    <li>Codes promotionnels (pourcentage ou montant fixe)</li>
+    <li>Sélection du moyen de paiement et confirmation de commande</li>
+  </ul>
+
+  <h3>3.5 Suivi de commande</h3>
+  <ul>
+    <li>Onglets "Commandes en cours" / "Historique"</li>
+    <li>Statuts progressifs (confirmée → en préparation → en livraison → livrée) avec indicateur "En direct" sur l'accueil</li>
+    <li>Recommande en un clic depuis l'historique</li>
+  </ul>
+
+  <h3>3.6 Reels — découverte sociale vidéo</h3>
+  <ul>
+    <li>Fil vertical de vidéos courtes en lecture automatique (défilement, lecture/pause, son)</li>
+    <li>J'aime / Je n'aime pas (mutuellement exclusifs), commentaires (avec like/dislike par commentaire), abonnement à un créateur, sauvegarde, partage</li>
+    <li>Partage réel vers Facebook / WhatsApp, lien copié pour Instagram</li>
+    <li>Redirection vers la fiche restaurant liée à une vidéo</li>
+  </ul>
+
+  <h3>3.7 Fiches restaurants</h3>
+  <ul>
+    <li>Vue segmentée Menu / Vidéos / Localisation</li>
+    <li>Mini-carte avec point de localisation</li>
+  </ul>
+
+  <h3>3.8 Profil, paramètres &amp; assistance</h3>
+  <ul>
+    <li>Statistiques calculées (commandes, favoris, avis), favoris, historique de commandes</li>
+    <li>Paramètres : langue, zone de livraison, notifications, changement de mot de passe</li>
+    <li>Notifications, FAQ/contact, politique de confidentialité, conditions d'utilisation</li>
+  </ul>
+
+  <h3>3.9 Multilingue</h3>
+  <p>Anglais, français, arabe — avec inversion complète de la mise en page (RTL) pour l'arabe. Dans le prototype actuel, seuls les écrans d'onboarding/authentification sont traduits ; l'extension de la traduction à l'ensemble du parcours est une <b>décision produit à valider</b> avant le développement natif (impact sur le périmètre et la charge, cf. §8).</p>
+</section>
+
+<section id="non-fonctionnel">
+  <h2><span class="num">4</span>Exigences non fonctionnelles</h2>
+  <table>
+    <tr><th>Catégorie</th><th>Exigence</th></tr>
+    <tr><td>Performance</td><td>Temps de chargement de l'accueil &lt; 2s sur réseau 4G ; lecture vidéo Reels sans latence perceptible au défilement</td></tr>
+    <tr><td>Sécurité</td><td>Chiffrement des échanges (TLS), stockage sécurisé des tokens, conformité aux exigences du prestataire de paiement (PCI-DSS via SDK certifié, aucune donnée carte stockée en propre)</td></tr>
+    <tr><td>Disponibilité</td><td>Backend disponible 99,5% (hors maintenance planifiée), file d'attente/retry sur les commandes en cas de coupure réseau côté client</td></tr>
+    <tr><td>Compatibilité</td><td>Android 8+ et iOS 14+ ; adaptation aux différentes tailles d'écran (design de référence 390×844px)</td></tr>
+    <tr><td>Accessibilité</td><td>Contrastes suffisants, tailles de police lisibles, zones tactiles ≥ 44px</td></tr>
+    <tr><td>Localisation</td><td>Support FR/EN/AR avec bascule RTL dynamique sans redémarrage de l'application</td></tr>
+    <tr><td>Scalabilité</td><td>Architecture backend permettant l'ajout de nouveaux restaurants/zones de livraison sans refonte</td></tr>
+  </table>
+</section>
+
+<section id="architecture">
+  <h2><span class="num">5</span>Architecture technique envisagée</h2>
+  <div class="card-grid">
+    <div class="card"><h4>Frontend mobile</h4><p>Flutter (Dart) — application unique iOS/Android, architecture par fonctionnalités, gestion d'état centralisée (Riverpod/Bloc), routage déclaratif (go_router).</p></div>
+    <div class="card"><h4>Backend</h4><p>API REST (ou GraphQL) sécurisée par jetons JWT/OAuth, architecture modulaire (auth, catalogue, commandes, social/reels, notifications).</p></div>
+    <div class="card"><h4>Base de données</h4><p>SGBD relationnel (PostgreSQL recommandé) pour les données transactionnelles ; stockage objet/CDN pour les médias (images, vidéos Reels).</p></div>
+    <div class="card"><h4>Paiement</h4><p>Intégration d'une passerelle certifiée (Stripe ou équivalent local) via SDK officiel côté mobile.</p></div>
+    <div class="card"><h4>Notifications</h4><p>Notifications push (Firebase Cloud Messaging) pour le suivi de commande et l'engagement social ; e-mails transactionnels.</p></div>
+    <div class="card"><h4>Temps réel</h4><p>WebSocket ou polling adaptatif pour le suivi de commande en direct et le badge "Live".</p></div>
+    <div class="card"><h4>Hébergement</h4><p>Infrastructure cloud (conteneurisée) avec environnements distincts (développement, recette, production) et pipeline CI/CD.</p></div>
+    <div class="card"><h4>Observabilité</h4><p>Journalisation centralisée, suivi des erreurs (Sentry ou équivalent), tableaux de bord de supervision applicative.</p></div>
+  </div>
+</section>
+
+<section id="livrables">
+  <h2><span class="num">6</span>Livrables actuels et cibles</h2>
+  <table>
+    <tr><th>Livrable</th><th>Description</th><th>Statut</th></tr>
+    <tr><td>Prototype interactif</td><td><code>docs/app.html</code> — parcours complet simulé, sans backend, données en mémoire</td><td><span class="badge done">Livré</span></td></tr>
+    <tr><td>Notes techniques du prototype</td><td><code>docs/readme.md</code> — structure des écrans, formats de données, comportements</td><td><span class="badge done">Livré</span></td></tr>
+    <tr><td>Cahier des charges</td><td>Le présent document</td><td><span class="badge done">Livré</span></td></tr>
+    <tr><td>Application Flutter native</td><td>Implémentation complète iOS/Android connectée à l'API réelle</td><td><span class="badge mvp">À développer</span></td></tr>
+    <tr><td>API backend</td><td>Services d'authentification, catalogue, commandes, paiement, social, notifications</td><td><span class="badge mvp">À développer</span></td></tr>
+    <tr><td>Back-office d'administration</td><td>Gestion des restaurants/produits/commandes par les équipes internes</td><td><span class="badge v2">Non inclus au périmètre MVP</span></td></tr>
+  </table>
+</section>
+
+<section id="roadmap">
+  <h2><span class="num">7</span>Évolutions futures (Roadmap V2+)</h2>
+  <p class="lead">Fonctionnalités identifiées comme à forte valeur ajoutée mais volontairement exclues du périmètre initial (MVP), à prioriser lors des itérations suivantes.</p>
+  <table>
+    <tr><th>Évolution</th><th>Description</th><th>Valeur estimée</th></tr>
+    <tr><td>Back-office d'administration</td><td>Interface web pour restaurateurs/administrateurs : gestion du catalogue, des commandes, des stocks et du reporting</td><td>Élevée — nécessaire à l'exploitation à grande échelle</td></tr>
+    <tr><td>Comptes restaurateurs (marketplace)</td><td>Onboarding self-service des restaurants, gestion autonome de leur menu et disponibilité</td><td>Élevée — condition de la croissance multi-enseignes</td></tr>
+    <tr><td>Suivi livreur en temps réel</td><td>Géolocalisation live du livreur sur une carte, ETA dynamique</td><td>Élevée — attendu standard du secteur</td></tr>
+    <tr><td>Programme de fidélité &amp; parrainage</td><td>Points de fidélité, récompenses, invitations avec bonus</td><td>Moyenne — levier de rétention</td></tr>
+    <tr><td>Chat support client</td><td>Messagerie in-app avec le support ou le livreur</td><td>Moyenne</td></tr>
+    <tr><td>Avis vérifiés post-achat</td><td>Restriction des avis aux commandes réellement passées</td><td>Moyenne — fiabilité de la note</td></tr>
+    <tr><td>Recommandations par IA</td><td>Modèle de recommandation basé sur l'historique et le comportement, au-delà des règles heuristiques actuelles</td><td>Moyenne</td></tr>
+    <tr><td>Paiement étendu</td><td>Portefeuille électronique intégré, paiement à la livraison (cash on delivery)</td><td>Moyenne</td></tr>
+    <tr><td>Mode hors-ligne</td><td>Consultation du panier/menu sans connexion, synchronisation différée</td><td>Faible/Moyenne</td></tr>
+    <tr><td>Internationalisation complète</td><td>Traduction FR/AR de tous les écrans post-connexion (aujourd'hui limitée à l'onboarding)</td><td>Moyenne — dépend du marché cible</td></tr>
+    <tr><td>Tests A/B &amp; Analytics avancés</td><td>Expérimentation produit, tableaux de bord d'usage détaillés</td><td>Moyenne</td></tr>
+    <tr><td>Modération des contenus Reels</td><td>Outils de signalement et de modération des vidéos/commentaires</td><td>Élevée si la composante sociale ouvre la publication aux utilisateurs</td></tr>
+  </table>
+</section>
+
+<section id="estimation">
+  <h2><span class="num">8</span>Estimation de charge et planning</h2>
+  <p class="lead">Hypothèse d'équipe : <b>1 développeur Backend</b> + <b>1 développeur Frontend (Flutter)</b>, méthodologie agile en sprints de 2 semaines, 5 jours ouvrés/semaine. Les charges ci-dessous couvrent le périmètre MVP défini au §3 (hors évolutions listées au §7).</p>
+
+  <h3>8.1 Charge Backend</h3>
+  <table>
+    <tr><th>Module</th><th>Charge (jours/homme)</th></tr>
+    <tr><td>Architecture, environnements, CI/CD</td><td>5</td></tr>
+    <tr><td>Authentification (e-mail/mot de passe, Google/Apple, OTP, JWT)</td><td>8</td></tr>
+    <tr><td>Gestion utilisateurs &amp; profils (favoris, adresses, préférences)</td><td>5</td></tr>
+    <tr><td>Catalogue (produits, catégories, restaurants, ingrédients, suppléments)</td><td>8</td></tr>
+    <tr><td>Recherche &amp; recommandations</td><td>5</td></tr>
+    <tr><td>Panier, commandes &amp; codes promo</td><td>8</td></tr>
+    <tr><td>Paiement (intégration passerelle certifiée)</td><td>8</td></tr>
+    <tr><td>Suivi de commande temps réel (statuts, WebSocket/push)</td><td>7</td></tr>
+    <tr><td>Module social Reels (vidéos, likes, commentaires, follow, partages)</td><td>10</td></tr>
+    <tr><td>Avis &amp; notation</td><td>3</td></tr>
+    <tr><td>Notifications (push &amp; e-mail transactionnel)</td><td>5</td></tr>
+    <tr><td>API d'administration &amp; reporting basique</td><td>8</td></tr>
+    <tr><td>Sécurité, tests, documentation API</td><td>6</td></tr>
+    <tr><td>Déploiement, supervision, mise en production</td><td>4</td></tr>
+    <tr class="totals-row"><td>Total Backend</td><td>≈ 90 jours-homme (≈ 18 semaines / 4,1 mois)</td></tr>
+  </table>
+
+  <h3>8.2 Charge Frontend (Flutter)</h3>
+  <table>
+    <tr><th>Module</th><th>Charge (jours/homme)</th></tr>
+    <tr><td>Setup projet, design system, thème, composants réutilisables</td><td>6</td></tr>
+    <tr><td>Internationalisation FR/EN/AR + RTL</td><td>5</td></tr>
+    <tr><td>Onboarding &amp; authentification (écrans + intégration API)</td><td>8</td></tr>
+    <tr><td>Accueil &amp; navigation (fil, carrousel, catégories, navigation basse)</td><td>8</td></tr>
+    <tr><td>Recherche</td><td>4</td></tr>
+    <tr><td>Fiche produit &amp; personnalisation</td><td>8</td></tr>
+    <tr><td>Panier, checkout &amp; interface de paiement</td><td>8</td></tr>
+    <tr><td>Suivi de commande (statuts live, badge "En direct")</td><td>5</td></tr>
+    <tr><td>Reels (lecteur vidéo, gestes, likes, commentaires, follow, partage)</td><td>12</td></tr>
+    <tr><td>Fiches restaurant (menu/vidéos/localisation, mini-carte)</td><td>5</td></tr>
+    <tr><td>Profil, paramètres, notifications, pages statiques</td><td>6</td></tr>
+    <tr><td>Intégration API complète &amp; gestion d'état (remplacement des données simulées)</td><td>10</td></tr>
+    <tr><td>Tests (widgets/intégration), corrections, finitions UI/UX</td><td>10</td></tr>
+    <tr><td>Préparation stores (icônes, splash screen, builds signés)</td><td>4</td></tr>
+    <tr class="totals-row fe"><td>Total Frontend</td><td>≈ 99 jours-homme (≈ 20 semaines / 4,5 mois)</td></tr>
+  </table>
+
+  <h3>8.3 Synthèse planning</h3>
+  <p>Backend et frontend peuvent démarrer en parallèle (le frontend consomme d'abord des données simulées, puis se raccorde à l'API réelle au fil de sa disponibilité). La durée calendaire du projet correspond donc approximativement à la charge de la piste la plus longue (frontend), augmentée d'une phase d'intégration, de recette et de stabilisation conjointe.</p>
+  <table>
+    <tr><th>Phase</th><th>Durée</th><th>Contenu</th></tr>
+    <tr><td>Cadrage &amp; démarrage (Sprint 0)</td><td>1 semaine</td><td>Validation du présent cahier des charges, choix techniques définitifs, mise en place des environnements</td></tr>
+    <tr><td>Développement parallèle</td><td>≈ 18–20 semaines</td><td>Backend et Frontend en avancement simultané par sprints de 2 semaines, points d'intégration réguliers</td></tr>
+    <tr><td>Intégration &amp; recette conjointe</td><td>2 semaines</td><td>Raccordement final, tests de bout en bout, correction des écarts</td></tr>
+    <tr><td>Recette utilisateur &amp; stabilisation</td><td>2 semaines</td><td>Tests utilisateurs, ajustements, préparation à la mise en production</td></tr>
+    <tr class="totals-row grand"><td>Durée totale estimée</td><td colspan="2">≈ 23–24 semaines calendaires (≈ 5,5 mois) avec 1 développeur Backend + 1 développeur Frontend</td></tr>
+  </table>
+
+  <div class="callout">
+    Cette estimation correspond à un périmètre <b>MVP</b> tel que décrit au §3. Toute fonctionnalité de la feuille de route (§7) — notamment le back-office d'administration, les comptes restaurateurs ou le suivi livreur temps réel — s'ajoute à cette charge et devra faire l'objet d'un chiffrage complémentaire.
+  </div>
+  <div class="callout warn">
+    L'ajout d'un(e) designer UI/UX et/ou d'un profil QA dédié réduirait sensiblement les délais ci-dessus (parallélisation des tests et des finitions visuelles), au prix d'un effectif plus important.
+  </div>
+</section>
+
+<section id="risques">
+  <h2><span class="num">9</span>Risques, hypothèses et exclusions</h2>
+  <h3>Hypothèses retenues pour l'estimation</h3>
+  <ul>
+    <li>Le prototype <code>docs/app.html</code> fait foi comme référence UX/UI — aucune conception graphique supplémentaire n'est requise en amont.</li>
+    <li>Un seul catalogue produit est mutualisé entre restaurants (comme dans le prototype) ; un modèle multi-inventaire par restaurant est hors périmètre MVP.</li>
+    <li>La passerelle de paiement et les comptes tiers (Google/Apple/Firebase) sont fournis en environnement de test (sandbox) dès le démarrage du projet.</li>
+    <li>La traduction complète (FR/AR) au-delà de l'onboarding n'est pas incluse dans l'estimation ci-dessus.</li>
+  </ul>
+  <h3>Risques identifiés</h3>
+  <ul>
+    <li><b>Dépendance à un développeur unique par piste :</b> toute absence prolongée impacte directement le planning (pas de redondance de compétence).</li>
+    <li><b>Intégration paiement :</b> délais de validation/certification côté prestataire de paiement pouvant dépasser le contrôle de l'équipe projet.</li>
+    <li><b>Composante vidéo (Reels) :</b> coûts d'hébergement/bande passante vidéo à anticiper dès le choix d'infrastructure.</li>
+    <li><b>Alignement contenu multilingue :</b> l'arabe (RTL) nécessite une vérification manuelle systématique de chaque écran, au-delà de la simple traduction de texte.</li>
+  </ul>
+  <h3>Exclusions explicites du périmètre MVP</h3>
+  <ul>
+    <li>Back-office d'administration / interface restaurateur</li>
+    <li>Suivi géolocalisé du livreur en temps réel</li>
+    <li>Programme de fidélité et parrainage</li>
+    <li>Modération automatisée des contenus Reels</li>
+  </ul>
+</section>
+
+<section id="conclusion">
+  <h2><span class="num">10</span>Conclusion</h2>
+  <p>Le prototype interactif <code>docs/app.html</code> constitue une base fonctionnelle et visuelle solide, couvrant l'ensemble des parcours attendus d'une application de commande de repas moderne enrichie d'une composante sociale vidéo. Le passage à une application native Flutter connectée à un backend réel représente un effort estimé à environ <b>90 jours-homme côté backend</b> et <b>99 jours-homme côté frontend</b>, soit une durée calendaire d'environ <b>5,5 mois</b> avec une équipe restreinte d'un développeur par piste. Les évolutions listées en feuille de route (§7) permettront, dans un second temps, de faire évoluer le produit vers une marketplace multi-restaurants complète.</p>
+</section>
+
+</main>
+
+<footer class="docfoot">
+  Tako's Korner — Cahier des Charges v1.0 · Document de référence, à mettre à jour à chaque évolution significative du périmètre.
+</footer>
+
+</div>
+</body>
+</html>

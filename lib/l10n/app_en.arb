@@ -1,0 +1,115 @@
+{
+  "@@locale": "en",
+  "unknown_error": "An unknown error has occurred",
+  "@unknown_error": {
+    "description": "Generic error message"
+  },
+  "data_processing_error": "An error occurred while processing the data.",
+  "@data_processing_error": {
+    "description": "Error message for data processing failure"
+  },
+  "no_internet_access": "Unable to access the Internet!",
+  "@no_internet_access": {
+    "description": "Error message for no internet access"
+  },
+  "common_xeducation": "XEducation",
+  "@common_xeducation": {
+    "description": "Label for common term: XEducation"
+  },
+  "reset_password": "Reset your password",
+  "@reset_password": {
+    "description": "Label for reset password action"
+  },
+  "reset_password_instruction": "Enter your email address and we'll send you a link to reset your password.",
+  "@reset_password_instruction": {
+    "description": "Instruction text for resetting password"
+  },
+  "common_email": "Email",
+  "@common_email": {
+    "description": "Label for email field"
+  },
+  "common_email_hint": "email@example.com",
+  "@common_email_hint": {
+    "description": "Hint text for email field"
+  },
+  "common_email_required": "Email is required",
+  "@common_email_required": {
+    "description": "Validation message for required email"
+  },
+  "common_email_invalid": "Invalid email",
+  "@common_email_invalid": {
+    "description": "Validation message for invalid email"
+  },
+  "send_reset_link": "Send reset link",
+  "@send_reset_link": {
+    "description": "Button label to send password reset link"
+  },
+  "back_to_login": "Back to login",
+  "@back_to_login": {
+    "description": "Button label to go back to login screen"
+  },
+  "common_password": "Password",
+  "@common_password": {
+    "description": "Label for password field"
+  },
+  "password_hint": "********",
+  "@password_hint": {
+    "description": "Hint text for password field"
+  },
+  "password_required": "Password is required",
+  "@password_required": {
+    "description": "Validation message for required password"
+  },
+  "password_length": "Password must be at least 8 characters long",
+  "@password_length": {
+    "description": "Validation message for password length"
+  },
+  "password_letters_numbers": "Password must contain both letters and numbers",
+  "@password_letters_numbers": {
+    "description": "Validation message for password complexity"
+  },
+  "forget_password": "Forget password",
+  "@forget_password": {
+    "description": "Label for forget password action"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Button label for login"
+  },
+  "common_select_option": "Select option",
+  "@common_select_option": {
+    "description": "Label for select option"
+  },
+  "common_agree": "Agree",
+  "@common_agree": {
+    "description": "Label for agree"
+  },
+  "welcome_title": "Welcome to Nusuk Guide",
+  "@welcome_title": {
+    "description": "Welcome screen title"
+  },
+  "welcome_subtitle": "Your smart companion for Hajj and Umrah",
+  "@welcome_subtitle": {
+    "description": "Welcome screen subtitle"
+  },
+  "start_now": "Start Now",
+  "@start_now": {
+    "description": "Button to start the app"
+  },
+  "dark_mode": "Dark Mode",
+  "@dark_mode": {
+    "description": "Dark mode toggle label"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language label"
+  },
+  "sign_in": "Sign In",
+  "@sign_in": {
+    "description": "Sign in button label"
+  },
+  "session_expired": "Your session has expired. Please log in again.",
+  "@session_expired": {
+    "description": "Error message shown when the user's authentication session has expired"
+  }
+}
