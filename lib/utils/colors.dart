@@ -2,58 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // ── Brand / Primary ──────────────────────────────────────────────────────────
-const Color primaryColor    = Color(0xFFEC1D23); // Red
-const Color primaryDark     = Color(0xFFC01019); // Dark Red
-const Color primaryLight    = Color(0xFFFF6B70); // Light Red
-const Color primaryBGColor  = Color(0xFFFFF0F0); // Light Red tint (bg use)
+const Color primaryColor = Color(0xFFEC1D23); // Red
+const Color primaryDark = Color(0xFFC01019); // Dark Red
+const Color primaryLight = Color(0xFFFF6B70); // Light Red
+const Color primaryBGColor = Color(0xFFFFF0F0); // Light Red tint (bg use)
 
 // ── Secondary ────────────────────────────────────────────────────────────────
-const Color secondaryColor  = Color(0xFF2596BE); // Blue
-const Color secondaryDark   = Color(0xFF1A7A9E); // Dark Blue
+const Color secondaryColor = Color(0xFF2596BE); // Blue
+const Color secondaryDark = Color(0xFF1A7A9E); // Dark Blue
 
 // ── Accent ───────────────────────────────────────────────────────────────────
-const Color accentAmber     = Color(0xFFF59E0B);
+const Color accentAmber = Color(0xFFF59E0B);
 const Color accentAmberDark = Color(0xFFD97706);
-const Color accentBlue      = Color(0xFF2596BE);
-const Color accentBlueBg    = Color(0xFFEFF6FF);
-const Color accentGreen     = Color(0xFF10B981);
-const Color accentGreenBg   = Color(0xFFECFDF5);
-const Color accentPurple    = Color(0xFFA855F7);
-const Color accentPurpleBg  = Color(0xFFF3E8FF);
-const Color accentOrange    = Color(0xFFF59E0B);
-const Color accentOrangeBg  = Color(0xFFFFF5E6);
-const Color accentRed       = Color(0xFFEC1D23);
-const Color accentRedBg     = Color(0xFFFDF4F3);
-const Color accentRedDark   = Color(0xFFC01019);
+const Color accentBlue = Color(0xFF2596BE);
+const Color accentBlueBg = Color(0xFFEFF6FF);
+const Color accentGreen = Color(0xFF10B981);
+const Color accentGreenBg = Color(0xFFECFDF5);
+const Color accentPurple = Color(0xFFA855F7);
+const Color accentPurpleBg = Color(0xFFF3E8FF);
+const Color accentOrange = Color(0xFFF59E0B);
+const Color accentOrangeBg = Color(0xFFFFF5E6);
+const Color accentRed = Color(0xFFEC1D23);
+const Color accentRedBg = Color(0xFFFDF4F3);
+const Color accentRedDark = Color(0xFFC01019);
 
-// ── Text ─────────────────────────────────────────────────────────────────────
-const Color textMain        = Color(0xFF1A1A2E);
-const Color textBody        = Color(0xFF4A5568);
-const Color textMuted       = Color(0xFF9CA3AF);
-const Color textMutedLight  = Color(0xFFBEC5CC);
-const Color textLight       = Color(0xFFF1F5F9);
+// ── Text (Light Mode) ─────────────────────────────────────────────────────────
+const Color textMain = Color(0xFF1A1A2E);
+const Color textBody = Color(0xFF4A5568);
+const Color textMuted = Color(0xFF9CA3AF);
+const Color textMutedLight = Color(0xFFBEC5CC);
+const Color textLight = Color(0xFFF1F5F9);
+
+// ── Text (Dark Mode) ──────────────────────────────────────────────────────────
+const Color textBodyDark = Color(0xFFCBD5E1);
+const Color textMutedDark = Color(0xFF64748B);
+const Color textMutedLightDark = Color(0xFF475569);
 
 // ── Light Mode UI ─────────────────────────────────────────────────────────────
 const Color uiBackgroundLight = Color(0xFFF0F2F5);
-const Color uiCardLight       = Color(0xFFFFFFFF);
-const Color uiBorderLight     = Color(0xFFE5E7EB);
-const Color uiCardGrayLight   = Color(0xFFEFEFEA);
+const Color uiCardLight = Color(0xFFFFFFFF);
+const Color uiBorderLight = Color(0xFFE5E7EB);
+const Color uiCardGrayLight = Color(0xFFEFEFEA);
 
 // ── Dark Mode UI ──────────────────────────────────────────────────────────────
-const Color uiBackgroundDark  = Color(0xFF0F172A);
-const Color uiCardDark        = Color(0xFF1E293B);
-const Color uiBorderDark      = Color(0xFF334155);
-const Color uiCardGrayDark    = Color(0xFF1A2035);
+const Color uiBackgroundDark = Color(0xFF0F172A);
+const Color uiCardDark = Color(0xFF1E293B);
+const Color uiBorderDark = Color(0xFF334155);
+const Color uiCardGrayDark = Color(0xFF1A2035);
 
 // ── Status Colors ─────────────────────────────────────────────────────────────
-const Color success   = Color(0xFF10B981);
+const Color success = Color(0xFF10B981);
 const Color successBg = Color(0xFFECFDF5);
-const Color warning   = Color(0xFFF59E0B);
+const Color warning = Color(0xFFF59E0B);
 const Color warningBg = Color(0xFFFFFBEB);
-const Color danger    = Color(0xFFEF4444);
-const Color dangerBg  = Color(0xFFFEF2F2);
-const Color info      = Color(0xFF2596BE);
-const Color infoBg    = Color(0xFFE0F2FE);
+const Color danger = Color(0xFFEF4444);
+const Color dangerBg = Color(0xFFFEF2F2);
+const Color info = Color(0xFF2596BE);
+const Color infoBg = Color(0xFFE0F2FE);
 
 // ── Shadows ───────────────────────────────────────────────────────────────────
 const List<BoxShadow> lightShadows = [
@@ -63,7 +68,7 @@ const List<BoxShadow> darkShadows = [
   BoxShadow(color: Color(0x0F000000), offset: Offset(0, 2), blurRadius: 0),
 ];
 
-final BoxBorder borderDark  = Border.all(color: uiBorderDark,  width: 0.5.w);
+final BoxBorder borderDark = Border.all(color: uiBorderDark, width: 0.5.w);
 final BoxBorder borderLight = Border.all(color: uiBorderLight, width: 0.5.w);
 
 // ── Gradients ─────────────────────────────────────────────────────────────────
@@ -137,12 +142,16 @@ extension ThemeColors on BuildContext {
   bool get _isDark => Theme.of(this).brightness == Brightness.dark;
 
   Color get backgroundColor => _isDark ? uiBackgroundDark : uiBackgroundLight;
-  Color get primary         => primaryColor;
-  Color get cardColor       => _isDark ? uiCardDark     : uiCardLight;
-  Color get cardGrayColor   => _isDark ? uiCardGrayDark : uiCardGrayLight;
-  Color get borderColor     => _isDark ? uiBorderDark   : uiBorderLight;
-  Color get textColor       => _isDark ? textLight      : textMain;
+  Color get primary => primaryColor;
+  Color get cardColor => _isDark ? uiCardDark : uiCardLight;
+  Color get cardGrayColor => _isDark ? uiCardGrayDark : uiCardGrayLight;
+  Color get borderColor => _isDark ? uiBorderDark : uiBorderLight;
+  Color get textColor => _isDark ? textLight : textMain;
+  Color get textBodyColor => _isDark ? textBodyDark : textBody;
+  Color get textMutedColor => _isDark ? textMutedDark : textMuted;
+  Color get textMutedLightColor =>
+      _isDark ? textMutedLightDark : textMutedLight;
 
   List<BoxShadow> get shadows => _isDark ? darkShadows : lightShadows;
-  BoxBorder       get border  => _isDark ? borderDark  : borderLight;
+  BoxBorder get border => _isDark ? borderDark : borderLight;
 }

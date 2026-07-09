@@ -32,61 +32,61 @@ class _TabScreenState extends State<TabScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cartCount = context.watch<CartProvider>().itemCount;
 
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: isDark ? uiCardDark : uiCardLight,
-          border: Border(
-            top: BorderSide(
-              color: isDark ? uiBorderDark : uiBorderLight,
-              width: 0.5,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: IndexedStack(index: _selectedIndex, children: _screens),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: isDark ? uiCardDark : uiCardLight,
+            border: Border(
+              top: BorderSide(
+                color: isDark ? uiBorderDark : uiBorderLight,
+                width: 0.5,
+              ),
             ),
+            boxShadow: isDark ? darkShadows : lightShadows,
           ),
-          boxShadow: isDark ? darkShadows : lightShadows,
-        ),
-        child: SafeArea(
-          child: SizedBox(
-            height: 60.h,
-            child: Row(
-              children: [
-                _TabItem(
-                  label: 'Home',
-                  icon: SolarIconsOutline.homeSmile,
-                  activeIcon: SolarIconsBold.homeSmile,
-                  index: 0,
-                  currentIndex: _selectedIndex,
-                  onTap: (i) => setState(() => _selectedIndex = i),
-                ),
-                _TabItem(
-                  label: 'Reels',
-                  icon: SolarIconsOutline.playCircle,
-                  activeIcon: SolarIconsBold.playCircle,
-                  index: 1,
-                  currentIndex: _selectedIndex,
-                  onTap: (i) => setState(() => _selectedIndex = i),
-                ),
-                _TabItem(
-                  label: 'Cart',
-                  icon: SolarIconsOutline.cartLarge2,
-                  activeIcon: SolarIconsBold.cartLarge2,
-                  index: 2,
-                  currentIndex: _selectedIndex,
-                  badge: cartCount > 0 ? '$cartCount' : null,
-                  onTap: (i) => setState(() => _selectedIndex = i),
-                ),
-                _TabItem(
-                  label: 'Profile',
-                  icon: SolarIconsOutline.userCircle,
-                  activeIcon: SolarIconsBold.userCircle,
-                  index: 3,
-                  currentIndex: _selectedIndex,
-                  onTap: (i) => setState(() => _selectedIndex = i),
-                ),
-              ],
+          child: SafeArea(
+            child: SizedBox(
+              height: 60.h,
+              child: Row(
+                children: [
+                  _TabItem(
+                    label: 'Home',
+                    icon: SolarIconsOutline.homeSmile,
+                    activeIcon: SolarIconsBold.homeSmile,
+                    index: 0,
+                    currentIndex: _selectedIndex,
+                    onTap: (i) => setState(() => _selectedIndex = i),
+                  ),
+                  _TabItem(
+                    label: 'Reels',
+                    icon: SolarIconsOutline.playCircle,
+                    activeIcon: SolarIconsBold.playCircle,
+                    index: 1,
+                    currentIndex: _selectedIndex,
+                    onTap: (i) => setState(() => _selectedIndex = i),
+                  ),
+                  _TabItem(
+                    label: 'Cart',
+                    icon: SolarIconsOutline.cartLarge2,
+                    activeIcon: SolarIconsBold.cartLarge2,
+                    index: 2,
+                    currentIndex: _selectedIndex,
+                    badge: cartCount > 0 ? '$cartCount' : null,
+                    onTap: (i) => setState(() => _selectedIndex = i),
+                  ),
+                  _TabItem(
+                    label: 'Profile',
+                    icon: SolarIconsOutline.userCircle,
+                    activeIcon: SolarIconsBold.userCircle,
+                    index: 3,
+                    currentIndex: _selectedIndex,
+                    onTap: (i) => setState(() => _selectedIndex = i),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -116,8 +116,8 @@ class _TabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active  = index == currentIndex;
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final active = index == currentIndex;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final fgColor = active ? primaryColor : (isDark ? textMuted : textBody);
 
     return Expanded(
@@ -130,11 +130,7 @@ class _TabItem extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Icon(
-                  active ? activeIcon : icon,
-                  size: 24.sp,
-                  color: fgColor,
-                ),
+                Icon(active ? activeIcon : icon, size: 24.sp, color: fgColor),
                 if (badge != null)
                   Positioned(
                     right: -6,

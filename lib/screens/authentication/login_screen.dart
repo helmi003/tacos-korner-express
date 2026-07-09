@@ -5,6 +5,7 @@ import 'package:takos_corner_express/screens/authentication/forgot_password_scre
 import 'package:takos_corner_express/screens/authentication/register_screen.dart';
 import 'package:takos_corner_express/screens/tab_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
+import 'package:takos_corner_express/widgets/auth/auth_header.dart';
 import 'package:takos_corner_express/widgets/global/button_widget.dart';
 import 'package:takos_corner_express/widgets/global/custom_textfield.dart';
 import 'package:takos_corner_express/widgets/others/or_divider.dart';
@@ -54,57 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  28.w,
-                  MediaQuery.of(context).padding.top + 40.h,
-                  28.w,
-                  36.h,
-                ),
-                decoration: const BoxDecoration(
-                  gradient: primaryGradient,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset(
-                          "assets/images/logo/logo_foreground.png",
-                          height: 40.h,
-                          width: 40.w,
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          "Tako's Korner",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    Text(
-                      'Welcome back! 👋',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      'Sign in to continue ordering',
-                      style: TextStyle(color: Colors.white70, fontSize: 14.sp),
-                    ),
-                  ],
-                ),
+              AuthHeader(
+                primaryGradient,
+                'Welcome back! 👋',
+                'Sign in to continue ordering',
               ),
               Padding(
                 padding: EdgeInsets.all(20.w),
@@ -135,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           AutovalidateMode.onUserInteraction,
                           prefixIcon: SolarIconsOutline.letter,
+                          widthBG: true,
                         ),
                         SizedBox(height: 16.h),
                         CustomTextfield(
@@ -153,6 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscure: _obscure,
                           setObscure: () =>
                               setState(() => _obscure = !_obscure),
+                          widthBG: true,
                         ),
                         SizedBox(height: 8.h),
                         Align(
@@ -218,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () => Navigator.pushReplacementNamed(
+                              onTap: () => Navigator.pushNamed(
                                 context,
                                 RegisterScreen.routeName,
                               ),

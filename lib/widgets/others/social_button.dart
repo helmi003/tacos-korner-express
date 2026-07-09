@@ -21,7 +21,7 @@ class SocialButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
-          color: context.cardColor,
+          color: context.backgroundColor,
           borderRadius: BorderRadius.circular(10.r),
           border: context.border,
         ),
