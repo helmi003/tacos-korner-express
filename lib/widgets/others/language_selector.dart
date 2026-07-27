@@ -6,8 +6,8 @@ import 'package:takos_corner_express/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSelector extends StatelessWidget {
-  final bool isDark;
-  const LanguageSelector({super.key, this.isDark = false});
+  final bool showTitle;
+  const LanguageSelector({super.key, this.showTitle = true});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class LanguageSelector extends StatelessWidget {
 
     return PopupMenuButton<String>(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-      color: isDark ? uiCardDark : context.cardColor,
+      color: context.cardColor,
       offset: const Offset(0, 40),
       onSelected: (code) {
         provider.setLanguage(Locale(code));
@@ -33,13 +33,7 @@ class LanguageSelector extends StatelessWidget {
                 height: 14.h,
               ),
               SizedBox(width: 8.w),
-              Text(
-                lang.title,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: isDark ? textLight : context.textColor,
-                ),
-              ),
+              Text(lang.title, style: TextStyle(fontSize: 13.sp)),
             ],
           ),
         );
@@ -47,9 +41,9 @@ class LanguageSelector extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: isDark ? uiCardDark : context.cardColor,
+          color: context.cardColor,
           borderRadius: BorderRadius.circular(20.r),
-          border: isDark ? borderDark : context.border,
+          border: context.border,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -59,19 +53,18 @@ class LanguageSelector extends StatelessWidget {
               width: 20.w,
               height: 14.h,
             ),
-            SizedBox(width: 4.w),
-            Text(
-              provider.getCurrentLanguageTitle(),
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: isDark ? textLight : context.textColor,
+            if (showTitle) ...[
+              SizedBox(width: 4.w),
+              Text(
+                provider.getCurrentLanguageTitle(),
+                style: TextStyle(fontSize: 13.sp, color: context.textColor),
               ),
-            ),
+            ],
             SizedBox(width: 4.w),
             Icon(
               Icons.keyboard_arrow_down_rounded,
               size: 16.sp,
-              color: isDark ? textLight : textMuted,
+              color: context.textMutedColor,
             ),
           ],
         ),

@@ -102,8 +102,8 @@ class CustomTextfield extends StatelessWidget {
                       ? const Color(0xFF1565C0).withValues(alpha: 0.25)
                       : const Color(0xFF1E88E5).withValues(alpha: 0.10))
                 : (widthBG == true
-                      ? context.backgroundColor
-                      : context.cardColor),
+                      ? context.cardColor
+                      : context.backgroundColor),
             border: InputBorder.none,
             errorStyle: TextStyle(fontSize: 10.sp),
             errorMaxLines: 2,

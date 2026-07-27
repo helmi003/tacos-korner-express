@@ -23,10 +23,10 @@ class _Reel {
 
 const _reels = [
   _Reel(restaurantName: 'El Rancho', dishName: 'Crispy Chicken Taco', emoji: '🌮', likes: 1420, comments: 84, accent: primaryColor),
-  _Reel(restaurantName: 'Burger Craft', dishName: 'Double Smash Burger', emoji: '🍔', likes: 983, comments: 51, accent: accentAmber),
-  _Reel(restaurantName: 'Sakura Sushi', dishName: 'Dragon Roll', emoji: '🍣', likes: 2100, comments: 123, accent: accentBlue),
-  _Reel(restaurantName: 'La Bella Pizza', dishName: 'Quattro Formaggi', emoji: '🍕', likes: 760, comments: 39, accent: accentGreen),
-  _Reel(restaurantName: 'Fresh Bar', dishName: 'Tropical Açaí', emoji: '🫐', likes: 1830, comments: 97, accent: accentPurple),
+  _Reel(restaurantName: 'Burger Craft', dishName: 'Double Smash Burger', emoji: '🍔', likes: 983, comments: 51, accent: accentAmberLight),
+  _Reel(restaurantName: 'Sakura Sushi', dishName: 'Dragon Roll', emoji: '🍣', likes: 2100, comments: 123, accent: accentBlueLight),
+  _Reel(restaurantName: 'La Bella Pizza', dishName: 'Quattro Formaggi', emoji: '🍕', likes: 760, comments: 39, accent: accentGreenLight),
+  _Reel(restaurantName: 'Fresh Bar', dishName: 'Tropical Açaí', emoji: '🫐', likes: 1830, comments: 97, accent: accentPurpleLight),
 ];
 
 class ReelsScreen extends StatefulWidget {

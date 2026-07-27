@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takos_corner_express/main.dart';
 import 'package:takos_corner_express/screens/authentication/onboarding_screen.dart';
-import 'package:takos_corner_express/screens/tab_screen.dart';
+import 'package:takos_corner_express/screens/tabs/tab_screen.dart';
 import 'package:takos_corner_express/widgets/global/custom_error_dialog.dart';
 
 class SplashScreen extends StatefulWidget {

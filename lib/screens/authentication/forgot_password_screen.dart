@@ -235,7 +235,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Icon(
               SolarIconsOutline.lockPassword,
               size: 60.sp,
-              color: accentAmber,
+              color: context.accentAmber,
             ),
             SizedBox(height: 20.h),
             CustomTextfield(
@@ -260,7 +260,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               'Send Reset Code',
               _sendEmail,
               isLoading: isLoading,
-              bgColor: accentAmber,
+              bgColor: context.accentAmber,
               icon: SolarIconsBold.plain2,
               iconRight: true,
             ),
@@ -286,10 +286,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             width: 80.w,
             height: 80.w,
             decoration: BoxDecoration(
-              color: accentAmberDark.withValues(alpha: 0.1),
+              color: context.accentAmber.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(SolarIconsBold.letter, size: 38.sp, color: accentAmber),
+            child: Icon(SolarIconsBold.letter, size: 38.sp, color: context.accentAmber),
           ),
           SizedBox(height: 16.h),
           Text(
@@ -310,7 +310,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ButtonWidget(
             'Enter OTP Code',
             () => setState(() => _step = _ForgotStep.otp),
-            bgColor: accentAmber,
+            bgColor: context.accentAmber,
             icon: SolarIconsBold.key,
             iconRight: true,
           ),
@@ -394,7 +394,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               'Verify Code',
               _verifyOtp,
               isLoading: isVerifying,
-              bgColor: accentGreen,
+              bgColor: context.accentGreen,
               icon: SolarIconsBold.checkCircle,
               iconRight: true,
             ),
@@ -473,7 +473,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               'Reset Password',
               _resetPassword,
               isLoading: isLoading,
-              bgColor: accentGreen,
+              bgColor: context.accentGreen,
               icon: SolarIconsBold.checkCircle,
               iconRight: true,
             ),

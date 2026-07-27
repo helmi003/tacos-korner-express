@@ -11,6 +11,7 @@ class CustomSearchTextfield extends StatelessWidget {
   final bool? widthBG;
   final bool isDropdown;
   final FocusNode? focusNode;
+  final ValueChanged<String>? onSubmitted;
 
   const CustomSearchTextfield(
     this.hintTitle, {
@@ -21,6 +22,7 @@ class CustomSearchTextfield extends StatelessWidget {
     this.widthBG,
     this.isDropdown = false,
     this.focusNode,
+    this.onSubmitted,
   });
 
   @override
@@ -29,6 +31,7 @@ class CustomSearchTextfield extends StatelessWidget {
       controller: searchController,
       focusNode: focusNode,
       keyboardType: TextInputType.text,
+      textInputAction: onSubmitted != null ? TextInputAction.search : TextInputAction.done,
       decoration: InputDecoration(
         filled: true,
         fillColor: widthBG == true
@@ -66,6 +69,7 @@ class CustomSearchTextfield extends StatelessWidget {
         hintStyle: TextStyle(color: textMutedLight, fontSize: 12.sp),
       ),
       onChanged: handleSearchChanged,
+      onSubmitted: onSubmitted,
     );
   }
 }

@@ -14,7 +14,7 @@ class PasswordStrengthBar extends StatelessWidget {
     super.key,
     required this.password,
     this.labels = const ['Weak', 'Fair', 'Good', 'Strong'],
-    this.midColor = accentOrange,
+    this.midColor = accentOrangeLight, // default param must be compile-time const; not theme-reactive
   });
 
   bool get _hasMin => hasMinLength(password);

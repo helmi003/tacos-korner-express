@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:takos_corner_express/screens/notifications_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:solar_icons/solar_icons.dart';
 
@@ -11,7 +12,9 @@ class NotificationBell extends StatelessWidget {
   Widget build(BuildContext context) {
     final unread = 0;
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+      ),
       child: Stack(
         clipBehavior: Clip.none,
         children: [

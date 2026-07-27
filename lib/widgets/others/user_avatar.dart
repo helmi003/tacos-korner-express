@@ -38,7 +38,7 @@ class UserAvatar extends StatelessWidget {
     final badgeIconSize = (size * 0.26).sp;
     final badgeOffset = -(size * 0.08).w;
     final effectiveBg = backgroundColor ?? primaryColor.withValues(alpha: 0.1);
-    final effectiveFg = foregroundColor ?? primaryColor;
+    final effectiveFg = foregroundColor ?? textLight;
 
     return Stack(
       clipBehavior: Clip.none,

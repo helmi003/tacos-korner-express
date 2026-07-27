@@ -14,6 +14,7 @@ class CustomCashedImage extends StatelessWidget {
   final double? width;
   final Widget? errorWidget;
   final Widget? placeholderWidget;
+  final double? radius;
 
   const CustomCashedImage(
     this.image, {
@@ -22,6 +23,7 @@ class CustomCashedImage extends StatelessWidget {
     this.width,
     this.errorWidget,
     this.placeholderWidget,
+    this.radius = 6,
     super.key,
   });
 
@@ -32,7 +34,7 @@ class CustomCashedImage extends StatelessWidget {
         ? image
         : '${(baseUrl ?? '').replaceAll(RegExp(r'/api/v\d+.*$'), '')}$image';
     return CachedNetworkImage(
-      key: UniqueKey(),
+      key: ValueKey(resolvedUrl),
       imageUrl: resolvedUrl,
       fadeInDuration: Duration.zero,
       cacheManager: CustomCacheManager(),
@@ -40,32 +42,32 @@ class CustomCashedImage extends StatelessWidget {
         return Image(
           image: imageProvider,
           fit: fit,
-          width: width,
-          height: height,
+          width: width?.h,
+          height: height?.h,
         );
       },
       errorWidget: (context, _, _) {
         if (errorWidget != null) return errorWidget!;
         return Container(
-          width: width,
-          height: height,
+          width: width?.h,
+          height: height?.h,
           decoration: BoxDecoration(
             color: context.textColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(6.r),
+            borderRadius: BorderRadius.circular(radius!.r),
           ),
-          child: Icon(SolarIconsOutline.user, size: 24),
+          child: Icon(SolarIconsOutline.album, size: (height?.sp ?? 24.sp) / 2),
         );
       },
       placeholder: (context, url) {
         if (placeholderWidget != null) return placeholderWidget!;
         return CustomShimmer(
-          borderRadius: height?.r,
+          borderRadius: radius?.r,
           child: Container(
-            width: width?.r,
-            height: height?.r,
+            width: width?.h,
+            height: height?.h,
             decoration: BoxDecoration(
               color: context.textColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(6.r),
+              borderRadius: BorderRadius.circular(radius!.r),
             ),
           ),
         );

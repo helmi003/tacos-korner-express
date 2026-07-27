@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:solar_icons/solar_icons.dart';
+import 'package:takos_corner_express/screens/settings/settings_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/others/notification_bell.dart';
 
@@ -30,7 +32,20 @@ PreferredSizeWidget customAppBar(BuildContext context) {
             ),
           ),
           Spacer(),
-          Row(children: [const NotificationBell()]),
+          Row(
+            children: [
+              const NotificationBell(),
+              IconButton(
+                icon: Icon(
+                  SolarIconsOutline.settings,
+                  size: 22.sp,
+                  color: context.textColor,
+                ),
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(SettingsScreen.routeName),
+              ),
+            ],
+          ),
         ],
       ),
     ),

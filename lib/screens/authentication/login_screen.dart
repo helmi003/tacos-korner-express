@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/screens/authentication/forgot_password_screen.dart';
 import 'package:takos_corner_express/screens/authentication/register_screen.dart';
-import 'package:takos_corner_express/screens/tab_screen.dart';
+import 'package:takos_corner_express/screens/tabs/tab_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/auth/auth_header.dart';
 import 'package:takos_corner_express/widgets/global/button_widget.dart';
@@ -45,8 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -169,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               "Don't have an account? ",
                               style: TextStyle(
-                                color: isDark ? textMuted : textBody,
+                                color: context.textBodyColor,
                                 fontSize: 13.sp,
                               ),
                             ),

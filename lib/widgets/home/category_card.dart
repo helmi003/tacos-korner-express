@@ -21,7 +21,7 @@ class CategoryCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         margin: EdgeInsets.symmetric(horizontal: 5.w),
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: active ? primaryColor : context.cardColor,
           borderRadius: BorderRadius.circular(14.r),
@@ -36,12 +36,18 @@ class CategoryCard extends StatelessWidget {
           children: [
             Text(category.emoji, style: TextStyle(fontSize: 22.sp)),
             SizedBox(height: 4.h),
-            Text(
-              category.label,
-              style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w600,
-                color: active ? textLight : context.textBodyColor,
+            SizedBox(
+              width: 48.w,
+              child: Text(
+                category.label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  fontWeight: FontWeight.w600,
+                  color: active ? textLight : context.textBodyColor,
+                ),
               ),
             ),
           ],

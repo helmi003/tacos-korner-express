@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
-import 'package:takos_corner_express/screens/cart_screen.dart';
-import 'package:takos_corner_express/screens/home_screen.dart';
-import 'package:takos_corner_express/screens/profile_screen.dart';
-import 'package:takos_corner_express/screens/reels_screen.dart';
+import 'package:takos_corner_express/screens/tabs/cart_screen.dart';
+import 'package:takos_corner_express/screens/tabs/home_screen.dart';
+import 'package:takos_corner_express/screens/tabs/profile_screen.dart';
+import 'package:takos_corner_express/screens/tabs/reels_screen.dart';
 import 'package:takos_corner_express/services/cart_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 
@@ -29,7 +29,6 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final cartCount = context.watch<CartProvider>().itemCount;
 
     return GestureDetector(
@@ -38,14 +37,11 @@ class _TabScreenState extends State<TabScreen> {
         body: IndexedStack(index: _selectedIndex, children: _screens),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: isDark ? uiCardDark : uiCardLight,
+            color: context.cardColor,
             border: Border(
-              top: BorderSide(
-                color: isDark ? uiBorderDark : uiBorderLight,
-                width: 0.5,
-              ),
+              top: BorderSide(color: context.borderColor, width: 0.5),
             ),
-            boxShadow: isDark ? darkShadows : lightShadows,
+            boxShadow: context.shadows,
           ),
           child: SafeArea(
             child: SizedBox(
@@ -117,8 +113,7 @@ class _TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final active = index == currentIndex;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fgColor = active ? primaryColor : (isDark ? textMuted : textBody);
+    final fgColor = active ? primaryColor : context.textBodyColor;
 
     return Expanded(
       child: GestureDetector(

@@ -1,11 +1,14 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/helpers/password_helper.dart';
 import 'package:takos_corner_express/screens/authentication/login_screen.dart';
-import 'package:takos_corner_express/screens/tab_screen.dart';
+import 'package:takos_corner_express/screens/settings/legal/privacy_policy_screen.dart';
+import 'package:takos_corner_express/screens/settings/legal/terms_screen.dart';
+import 'package:takos_corner_express/screens/tabs/tab_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/auth/auth_header.dart';
 import 'package:takos_corner_express/widgets/global/button_widget.dart';
@@ -77,8 +80,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -238,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 text: TextSpan(
                                   style: TextStyle(
                                     fontSize: 12.sp,
-                                    color: isDark ? textMuted : textBody,
+                                    color: context.textBodyColor,
                                   ),
                                   children: [
                                     const TextSpan(text: 'I agree to the '),
@@ -248,6 +249,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         color: primaryColor,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const TermsScreen(),
+                                              ),
+                                            ),
                                     ),
                                     const TextSpan(text: ' and '),
                                     TextSpan(
@@ -256,6 +265,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         color: primaryColor,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const PrivacyPolicyScreen(),
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),
@@ -275,7 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           'Create Account',
                           _register,
                           isLoading: _loading,
-                          bgColor: secondaryColor,
+                          bgColor: context.tertiary,
                           icon: SolarIconsBold.arrowRight,
                           iconRight: true,
                         ),
@@ -308,7 +325,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Text(
                               'Already have an account? ',
                               style: TextStyle(
-                                color: isDark ? textMuted : textBody,
+                                color: context.textBodyColor,
                                 fontSize: 13.sp,
                               ),
                             ),
