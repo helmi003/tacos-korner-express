@@ -1,20 +1,29 @@
 import 'package:country_phone_validator/country_phone_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart'
-    show PhoneNumber;
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 
-String _flagEmoji(String isoCode) {
-  if (isoCode.length != 2) return '🏳';
-  const base = 0x1F1E6;
-  final chars = isoCode
-      .toUpperCase()
-      .codeUnits
-      .map((c) => base + (c - 0x41))
-      .toList();
-  return String.fromCharCodes(chars);
+final List<String> _kAllowedCountryCodes = countries
+    .map((c) => c.isoCode)
+    .toList();
+
+String _phoneDigitsPlaceholder(String isoCode) {
+  final country = CountryUtils.getCountryByIsoCode(isoCode);
+  if (country == null) return '';
+  var remaining = country.phoneMaxLength;
+  final groups = <String>[];
+  final firstGroup = remaining % 3;
+  if (firstGroup > 0) {
+    groups.add('X' * firstGroup);
+    remaining -= firstGroup;
+  }
+  while (remaining > 0) {
+    groups.add('X' * 3);
+    remaining -= 3;
+  }
+  return '(${country.dialCode}) ${groups.join(' ')}';
 }
 
 class CustomPhoneNumberField extends StatefulWidget {
@@ -25,6 +34,7 @@ class CustomPhoneNumberField extends StatefulWidget {
   final String? initialPhoneNumber;
   final bool? isRequired;
   final bool? withBG;
+  final String? externalErrorText;
 
   const CustomPhoneNumberField(
     this.label,
@@ -35,6 +45,7 @@ class CustomPhoneNumberField extends StatefulWidget {
     this.initialPhoneNumber,
     this.isRequired,
     this.withBG,
+    this.externalErrorText,
   });
 
   @override
@@ -42,90 +53,27 @@ class CustomPhoneNumberField extends StatefulWidget {
 }
 
 class _CustomPhoneNumberFieldState extends State<CustomPhoneNumberField> {
-  late Country _country;
+  PhoneNumber? _initialNumber;
+  PhoneNumber? _currentPhone;
 
   @override
   void initState() {
     super.initState();
-    _country =
-        CountryUtils.getCountryByIsoCode(widget.initialCountry) ??
-        countries.first;
-    if (widget.initialPhoneNumber != null) {
-      widget.controller.text = widget.initialPhoneNumber!;
-    }
-    widget.controller.addListener(_onNumberChanged);
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_onNumberChanged);
-    super.dispose();
-  }
-
-  void _onNumberChanged() {
-    widget.onInputChanged?.call(
-      PhoneNumber(
-        isoCode: _country.isoCode,
-        dialCode: _country.dialCode,
-        phoneNumber: '${_country.dialCode}${widget.controller.text}',
-      ),
+    _initialNumber = PhoneNumber(
+      isoCode: widget.initialCountry,
+      phoneNumber: widget.initialPhoneNumber,
     );
-  }
-
-  Future<void> _pickCountry() async {
-    final selected = await showModalBottomSheet<Country>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _CountryPickerSheet(selected: _country),
-    );
-    if (selected != null && mounted) {
-      setState(() => _country = selected);
-      _onNumberChanged();
-    }
-  }
-
-  String? _phoneValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      if (widget.isRequired == true) return 'Ce champ est obligatoire';
-      return null;
-    }
-    final national = value.trim().replaceAll(RegExp(r'[\s\-]'), '');
-    final len = national.length;
-    if (_country.phoneMinLength == _country.phoneMaxLength) {
-      if (len != _country.phoneMinLength) {
-        return 'Doit contenir exactement ${_country.phoneMinLength} chiffres';
-      }
-    } else {
-      if (len < _country.phoneMinLength || len > _country.phoneMaxLength) {
-        return 'Doit contenir entre ${_country.phoneMinLength} et ${_country.phoneMaxLength} chiffres';
-      }
-    }
-    if (_country.startingDigits.isNotEmpty &&
-        !_country.startingDigits.any((d) => national.startsWith(d))) {
-      return 'Doit commencer par ${_country.startingDigits.join(', ')}';
-    }
-    return null;
-  }
-
-  String _formatHint() {
-    final lengthText = _country.phoneMinLength == _country.phoneMaxLength
-        ? '${_country.phoneMinLength} chiffres'
-        : '${_country.phoneMinLength}–${_country.phoneMaxLength} chiffres';
-    return '$lengthText pour ${_country.isoCode}';
+    _currentPhone = _initialNumber;
   }
 
   @override
   Widget build(BuildContext context) {
-    final fillColor = widget.withBG == true
-        ? context.cardColor
-        : context.backgroundColor;
-
     return FormField<String>(
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: _phoneValidator,
+      validator: phoneValidator,
       builder: (field) {
-        final borderColor = field.hasError ? danger : context.borderColor;
+        final errorText = field.errorText ?? widget.externalErrorText;
+        final hasError = errorText != null;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -149,7 +97,7 @@ class _CustomPhoneNumberFieldState extends State<CustomPhoneNumberField> {
                         text: ' Optional',
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          color: textMuted,
+                          color: context.textMutedColor,
                         ),
                       ),
                   ],
@@ -157,97 +105,82 @@ class _CustomPhoneNumberFieldState extends State<CustomPhoneNumberField> {
               ),
               SizedBox(height: 5.h),
             ],
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: _pickCountry,
-                  child: Container(
-                    height: 46.h,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    decoration: BoxDecoration(
-                      color: fillColor,
+            Container(
+              constraints: BoxConstraints(maxHeight: 300.h),
+              decoration: BoxDecoration(
+                color: widget.withBG == true
+                    ? context.cardColor
+                    : context.backgroundColor,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: hasError ? danger : context.borderColor,
+                  width: 0.5.w,
+                ),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.r),
+                child: InternationalPhoneNumberInput(
+                  textFieldController: widget.controller,
+                  initialValue: _initialNumber,
+                  onInputChanged: (number) {
+                    _currentPhone = number;
+                    widget.onInputChanged?.call(number);
+                    field.didChange(widget.controller.text);
+                  },
+                  formatInput: false,
+                  countries: _kAllowedCountryCodes,
+                  selectorConfig: const SelectorConfig(
+                    selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                    useBottomSheetSafeArea: true,
+                  ),
+                  autoFocusSearch: true,
+                  searchBoxDecoration: InputDecoration(
+                    hintText: "XX XXX XXX",
+                    hintStyle: TextStyle(
+                      color: context.textMutedColor,
+                      fontSize: 12.sp,
+                    ),
+                    prefixIcon: Icon(
+                      SolarIconsOutline.minimalisticMagnifier,
+                      size: 18.sp,
+                      color: context.textMutedColor,
+                    ),
+                    filled: true,
+                    fillColor: context.cardColor,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: borderColor, width: 0.5.w),
+                      borderSide: BorderSide.none,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          _flagEmoji(_country.isoCode),
-                          style: TextStyle(fontSize: 18.sp),
-                        ),
-                        SizedBox(width: 6.w),
-                        Text(
-                          _country.dialCode,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: context.textColor,
-                          ),
-                        ),
-                        SizedBox(width: 2.w),
-                        Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 18.sp,
-                          color: textMuted,
-                        ),
-                      ],
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 10.h,
                     ),
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: SizedBox(
-                    height: 46.h,
-                    child: TextFormField(
-                      controller: widget.controller,
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: context.textColor,
-                      ),
-                      onChanged: (_) => field.didChange(widget.controller.text),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        filled: true,
-                        fillColor: fillColor,
-                        hintText: '96 XXX XXX',
-                        hintStyle: TextStyle(color: textMuted, fontSize: 12.sp),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: borderColor,
-                            width: 0.5.w,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: borderColor,
-                            width: 0.5.w,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(
-                            color: borderColor,
-                            width: 0.5.w,
-                          ),
-                        ),
-                      ),
+                  inputDecoration: InputDecoration(
+                    hintText: _phoneDigitsPlaceholder(
+                      _currentPhone?.isoCode ?? widget.initialCountry,
                     ),
+                    hintStyle: TextStyle(
+                      color: context.textMutedColor,
+                      fontSize: 12.sp,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 10.h),
                   ),
+                  textStyle: TextStyle(
+                    fontSize: 14.sp,
+                    color: context.textColor,
+                  ),
+                  validator: (_) => null,
                 ),
-              ],
+              ),
             ),
-            if (field.hasError)
+            if (hasError)
               Padding(
                 padding: EdgeInsets.only(top: 5.h, left: 2.w),
                 child: Text(
-                  field.errorText!,
+                  errorText,
                   style: TextStyle(color: danger, fontSize: 10.sp),
                 ),
               )
@@ -255,8 +188,11 @@ class _CustomPhoneNumberFieldState extends State<CustomPhoneNumberField> {
               Padding(
                 padding: EdgeInsets.only(top: 4.h, left: 2.w),
                 child: Text(
-                  _formatHint(),
-                  style: TextStyle(fontSize: 10.sp, color: textMuted),
+                  _getFormatHint(context),
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: context.textMutedColor,
+                  ),
                 ),
               ),
           ],
@@ -264,114 +200,40 @@ class _CustomPhoneNumberFieldState extends State<CustomPhoneNumberField> {
       },
     );
   }
-}
 
-class _CountryPickerSheet extends StatefulWidget {
-  final Country selected;
-  const _CountryPickerSheet({required this.selected});
-
-  @override
-  State<_CountryPickerSheet> createState() => _CountryPickerSheetState();
-}
-
-class _CountryPickerSheetState extends State<_CountryPickerSheet> {
-  final _searchCtrl = TextEditingController();
-  List<Country> _filtered = countries;
-
-  @override
-  void dispose() {
-    _searchCtrl.dispose();
-    super.dispose();
+  String _getFormatHint(BuildContext context) {
+    final isoCode = _currentPhone?.isoCode ?? widget.initialCountry;
+    final country = CountryUtils.getCountryByIsoCode(isoCode);
+    if (country == null) return '';
+    final lengthText = country.phoneMinLength == country.phoneMaxLength
+        ? '${country.phoneMinLength} digits'
+        : '${country.phoneMinLength}-${country.phoneMaxLength} digits';
+    return '$lengthText for $isoCode';
   }
 
-  void _onSearch(String query) {
-    final q = query.trim().toLowerCase();
-    setState(() {
-      _filtered = q.isEmpty
-          ? countries
-          : countries
-                .where(
-                  (c) =>
-                      c.name.toLowerCase().contains(q) ||
-                      c.dialCode.contains(q),
-                )
-                .toList();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      heightFactor: 0.75,
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.cardColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: Column(
-          children: [
-            SizedBox(height: 12.h),
-            Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: context.borderColor,
-                borderRadius: BorderRadius.circular(99),
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: TextField(
-                controller: _searchCtrl,
-                onChanged: _onSearch,
-                style: TextStyle(color: context.textColor, fontSize: 14.sp),
-                decoration: InputDecoration(
-                  hintText: 'Search country or code',
-                  hintStyle: TextStyle(color: textMuted, fontSize: 13.sp),
-                  prefixIcon: Icon(Icons.search, color: textMuted, size: 20.sp),
-                  filled: true,
-                  fillColor: context.backgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _filtered.length,
-                itemBuilder: (_, i) {
-                  final c = _filtered[i];
-                  final isSelected = c.isoCode == widget.selected.isoCode;
-                  return ListTile(
-                    leading: Text(
-                      _flagEmoji(c.isoCode),
-                      style: TextStyle(fontSize: 22.sp),
-                    ),
-                    title: Text(
-                      c.name,
-                      style: TextStyle(
-                        color: context.textColor,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                    trailing: Text(
-                      c.dialCode,
-                      style: TextStyle(color: textMuted, fontSize: 13.sp),
-                    ),
-                    selected: isSelected,
-                    selectedTileColor: primaryColor.withValues(alpha: 0.08),
-                    onTap: () => Navigator.pop(context, c),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  String? phoneValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      if (widget.isRequired == true) return 'Phone number is required';
+      return null;
+    }
+    final isoCode = _currentPhone?.isoCode ?? widget.initialCountry;
+    final country = CountryUtils.getCountryByIsoCode(isoCode);
+    if (country == null) return null;
+    final national = value.trim().replaceAll(RegExp(r'[\s\-]'), '');
+    final len = national.length;
+    if (country.phoneMinLength == country.phoneMaxLength) {
+      if (len != country.phoneMinLength) {
+        return 'Phone number must be exactly ${country.phoneMinLength} digits';
+      }
+    } else {
+      if (len < country.phoneMinLength || len > country.phoneMaxLength) {
+        return 'Phone number must be between ${country.phoneMinLength} and ${country.phoneMaxLength} digits';
+      }
+    }
+    if (country.startingDigits.isNotEmpty &&
+        !country.startingDigits.any((d) => national.startsWith(d))) {
+      return 'Phone number must start with ${country.startingDigits.join(', ')}';
+    }
+    return null;
   }
 }

@@ -7,6 +7,7 @@ import 'package:takos_corner_express/models/search_filters_model.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/utils/enums.dart';
 import 'package:takos_corner_express/utils/search_filter_utils.dart';
+import 'package:takos_corner_express/widgets/others/selectable_chip.dart';
 
 Future<SearchFilters?> showSearchFiltersSheet(
   BuildContext context, {
@@ -204,12 +205,12 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
                       spacing: 8.w,
                       runSpacing: 8.h,
                       children: [
-                        _chip(
+                        SelectableChip(
                           label: 'Any',
                           active: _zone == null && _nearMeLat == null,
                           onTap: () => _selectZone(null),
                         ),
-                        _chip(
+                        SelectableChip(
                           label:
                               'Near Me (${nearMeRadiusKm.toStringAsFixed(0)}km)',
                           active: _nearMeLat != null,
@@ -218,7 +219,7 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
                           onTap: _selectNearMe,
                         ),
                         ...widget.zones.map(
-                          (z) => _chip(
+                          (z) => SelectableChip(
                             label: z,
                             active: _zone == z,
                             onTap: () => _selectZone(z),
@@ -233,7 +234,7 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
                       spacing: 8.w,
                       runSpacing: 8.h,
                       children: PriceSort.values.map((option) {
-                        return _chip(
+                        return SelectableChip(
                           label: _priceSortLabels[option]!,
                           active: _priceSort == option,
                           onTap: () => setState(() => _priceSort = option),
@@ -247,7 +248,7 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
                       spacing: 8.w,
                       runSpacing: 8.h,
                       children: NameSort.values.map((option) {
-                        return _chip(
+                        return SelectableChip(
                           label: _nameSortLabels[option]!,
                           active: _nameSort == option,
                           onTap: () => setState(() => _nameSort = option),
@@ -298,7 +299,7 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
                       runSpacing: 8.h,
                       children: allergensList.map((allergen) {
                         final active = _excludedAllergens.contains(allergen);
-                        return _chip(
+                        return SelectableChip(
                           label: allergen,
                           active: active,
                           activeColor: danger,
@@ -372,65 +373,4 @@ class _SearchFiltersSheetState extends State<_SearchFiltersSheet> {
     );
   }
 
-  Widget _chip({
-    required String label,
-    required bool active,
-    required VoidCallback onTap,
-    Color? activeColor,
-    IconData? leadingIcon,
-    bool loading = false,
-  }) {
-    final color = activeColor ?? primaryColor;
-    return Builder(
-      builder: (context) => GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: active ? color.withValues(alpha: 0.12) : context.cardColor,
-            borderRadius: BorderRadius.circular(99),
-            border: Border.all(
-              color: active ? color : context.borderColor,
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (loading) ...[
-                SizedBox(
-                  width: 13.sp,
-                  height: 13.sp,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1.5,
-                    color: active ? color : context.textMutedColor,
-                  ),
-                ),
-                SizedBox(width: 5.w),
-              ] else if (leadingIcon != null) ...[
-                Icon(
-                  leadingIcon,
-                  size: 13.sp,
-                  color: active ? color : context.textMutedColor,
-                ),
-                SizedBox(width: 5.w),
-              ] else if (active) ...[
-                Icon(SolarIconsBold.checkCircle, size: 13.sp, color: color),
-                SizedBox(width: 5.w),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: active ? color : context.textBodyColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

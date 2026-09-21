@@ -10,6 +10,7 @@ import 'package:takos_corner_express/widgets/global/custom_back_appbar.dart';
 import 'package:takos_corner_express/widgets/home/product_card.dart';
 import 'package:takos_corner_express/widgets/home/restaurant_card.dart';
 import 'package:takos_corner_express/widgets/others/empty_card.dart';
+import 'package:takos_corner_express/widgets/others/see_all_card.dart';
 
 class FavouritesScreen extends StatelessWidget {
   static const routeName = '/FavouritesScreen';
@@ -36,6 +37,7 @@ class FavouritesScreen extends StatelessWidget {
                 message: 'No favourites yet.',
                 caption:
                     'Tap the heart on a dish or restaurant to save it here.',
+                withBG: false,
               ),
             )
           : SingleChildScrollView(
@@ -44,19 +46,26 @@ class FavouritesScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (favoriteProducts.isNotEmpty) ...[
-                    _sectionTitle('DISHES'),
+                    SeeAllCard(title: "DISHES"),
                     SizedBox(height: 10.h),
-                    Wrap(
-                      spacing: 10.w,
-                      runSpacing: 10.h,
-                      children: favoriteProducts
-                          .map((p) => ProductCard(product: p))
-                          .toList(),
+                    GridView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10.w,
+                        mainAxisSpacing: 10.w,
+                        mainAxisExtent: 200.h,
+                      ),
+                      itemCount: favoriteProducts.length,
+                      itemBuilder: (context, index) =>
+                          ProductCard(product: favoriteProducts[index]),
                     ),
                     SizedBox(height: 20.h),
                   ],
                   if (favoriteRestaurants.isNotEmpty) ...[
-                    _sectionTitle('RESTAURANTS'),
+                    SeeAllCard(title: "RESTAURANTS"),
                     SizedBox(height: 10.h),
                     ...favoriteRestaurants.map(
                       (r) => RestaurantCard(
@@ -73,18 +82,6 @@ class FavouritesScreen extends StatelessWidget {
                 ],
               ),
             ),
-    );
-  }
-
-  Widget _sectionTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 11.sp,
-        fontWeight: FontWeight.w600,
-        color: textMuted,
-        letterSpacing: 0.5,
-      ),
     );
   }
 }

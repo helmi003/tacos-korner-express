@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
+import 'package:takos_corner_express/helpers/user_helper.dart';
 import 'package:takos_corner_express/screens/authentication/forgot_password_screen.dart';
 import 'package:takos_corner_express/screens/authentication/register_screen.dart';
 import 'package:takos_corner_express/screens/tabs/tab_screen.dart';
+import 'package:takos_corner_express/services/user_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/auth/auth_header.dart';
 import 'package:takos_corner_express/widgets/global/button_widget.dart';
@@ -40,6 +43,14 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
     setState(() => _loading = false);
+    context.read<UserProvider>().login(
+      name: deriveNameFromEmail(_emailCtrl.text),
+      email: _emailCtrl.text.trim(),
+    );
+    Navigator.pushReplacementNamed(context, TabScreen.routeName);
+  }
+
+  void _continueAsGuest() {
     Navigator.pushReplacementNamed(context, TabScreen.routeName);
   }
 
@@ -138,7 +149,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           icon: SolarIconsOutline.login,
                           iconRight: true,
                         ),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 14.h),
+                        Center(
+                          child: TextButton(
+                            onPressed: _continueAsGuest,
+                            child: Text(
+                              'Continue as Guest',
+                              style: TextStyle(
+                                color: context.textBodyColor,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 6.h),
                         const OrDivider(),
                         SizedBox(height: 20.h),
                         Row(

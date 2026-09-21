@@ -13,12 +13,15 @@ class RestaurantModel {
   final int id;
   final String name;
   final String cuisine;
+  final String description;
   final double rating;
   final int reviews;
   final String deliveryTime;
   final double deliveryFee;
   final String zone;
   final bool isOpen;
+  final String openTime;
+  final String closeTime;
   final String image;
   final double lat;
   final double lng;
@@ -28,12 +31,15 @@ class RestaurantModel {
     required this.id,
     required this.name,
     required this.cuisine,
+    required this.description,
     required this.rating,
     required this.reviews,
     required this.deliveryTime,
     required this.deliveryFee,
     required this.zone,
     required this.isOpen,
+    required this.openTime,
+    required this.closeTime,
     required this.image,
     required this.lat,
     required this.lng,
@@ -122,12 +128,16 @@ const restaurants = [
     id: 1,
     name: 'Smash & Stack',
     cuisine: 'Burgers · American',
+    description:
+        'Old-school smash burgers cooked fast and hot, piled high with melty cheddar and our house sauces.',
     rating: 4.8,
     reviews: 534,
     deliveryTime: '20–30 min',
     deliveryFee: 1.99,
     zone: 'Centre-Ville',
     isOpen: true,
+    openTime: '10:00 AM',
+    closeTime: '11:00 PM',
     image:
         'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80',
     lat: 36.7992,
@@ -139,12 +149,16 @@ const restaurants = [
     id: 2,
     name: 'Sushi Omakase',
     cuisine: 'Sushi · Japanese',
+    description:
+        'Precision-cut nigiri and rolls from a chef obsessed with market-fresh fish and quiet perfection.',
     rating: 4.9,
     reviews: 412,
     deliveryTime: '30–45 min',
     deliveryFee: 2.49,
     zone: 'Lac 1',
     isOpen: true,
+    openTime: '11:30 AM',
+    closeTime: '10:30 PM',
     image:
         'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&q=80',
     lat: 36.8375,
@@ -156,12 +170,16 @@ const restaurants = [
     id: 3,
     name: "Luigi's Pizzeria",
     cuisine: 'Pizza · Italian',
+    description:
+        'Wood-fired Neapolitan pies with a blistered crust, made the way Nonna taught us.',
     rating: 4.7,
     reviews: 721,
     deliveryTime: '25–35 min',
     deliveryFee: 0,
     zone: 'Lac 2',
     isOpen: true,
+    openTime: '11:00 AM',
+    closeTime: '11:30 PM',
     image:
         'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80',
     lat: 36.8447,
@@ -173,12 +191,16 @@ const restaurants = [
     id: 4,
     name: 'Taco Loco',
     cuisine: 'Tacos · Mexican',
+    description:
+        'Street-style tacos loaded with charred meats, bright salsas, and fresh-pressed lime.',
     rating: 4.6,
     reviews: 309,
     deliveryTime: '15–25 min',
     deliveryFee: 1.49,
     zone: 'La Marsa',
     isOpen: true,
+    openTime: '11:00 AM',
+    closeTime: '12:00 AM',
     image:
         'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=80',
     lat: 36.8782,
@@ -190,12 +212,16 @@ const restaurants = [
     id: 5,
     name: 'Green Bowl',
     cuisine: 'Salads · Healthy',
+    description:
+        'Crisp, colorful salads and grain bowls built for people who actually want to feel good after lunch.',
     rating: 4.5,
     reviews: 198,
     deliveryTime: '20–30 min',
     deliveryFee: 1.99,
     zone: 'Carthage',
     isOpen: true,
+    openTime: '09:00 AM',
+    closeTime: '09:00 PM',
     image:
         'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80',
     lat: 36.8528,
@@ -207,12 +233,16 @@ const restaurants = [
     id: 6,
     name: 'Pasta Madre',
     cuisine: 'Pasta · Italian',
+    description:
+        'Handmade pasta, slow sauces, and the kind of comfort only real Italian cooking delivers.',
     rating: 4.8,
     reviews: 445,
     deliveryTime: '30–40 min',
     deliveryFee: 2.99,
     zone: 'Sidi Bou Said',
     isOpen: false,
+    openTime: '12:00 PM',
+    closeTime: '10:00 PM',
     image:
         'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80',
     lat: 36.8703,
@@ -224,12 +254,16 @@ const restaurants = [
     id: 7,
     name: 'The Fried Chicken House',
     cuisine: 'Chicken · American',
+    description:
+        'Buttermilk-brined, double-fried chicken with a shatteringly crisp crust.',
     rating: 4.7,
     reviews: 376,
     deliveryTime: '20–30 min',
     deliveryFee: 1.49,
     zone: 'Ariana',
     isOpen: true,
+    openTime: '10:30 AM',
+    closeTime: '11:00 PM',
     image:
         'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&q=80',
     lat: 36.8625,
@@ -241,12 +275,16 @@ const restaurants = [
     id: 8,
     name: 'Dessert Lab',
     cuisine: 'Desserts · Café',
+    description:
+        'Playful, Instagram-worthy desserts crafted daily — lava cakes, tarts, and small-batch ice cream.',
     rating: 4.9,
     reviews: 612,
     deliveryTime: '15–20 min',
     deliveryFee: 0.99,
     zone: 'Le Bardo',
     isOpen: true,
+    openTime: '09:00 AM',
+    closeTime: '10:00 PM',
     image:
         'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80',
     lat: 36.8092,
@@ -258,12 +296,16 @@ const restaurants = [
     id: 9,
     name: 'Dragon Wok',
     cuisine: 'Asian · Fusion',
+    description:
+        'Wok-fired Asian fusion classics with bold sauces and fast, fragrant cooking.',
     rating: 4.6,
     reviews: 271,
     deliveryTime: '25–35 min',
     deliveryFee: 2.99,
     zone: 'Menzah',
     isOpen: true,
+    openTime: '11:00 AM',
+    closeTime: '11:00 PM',
     image:
         'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=80',
     lat: 36.8397,
@@ -275,12 +317,16 @@ const restaurants = [
     id: 10,
     name: 'The Juice Bar',
     cuisine: 'Drinks · Healthy',
+    description:
+        'Cold-pressed juices and smoothies made from fruit sourced fresh every morning.',
     rating: 4.5,
     reviews: 152,
     deliveryTime: '10–15 min',
     deliveryFee: 0,
     zone: 'Ennasr',
     isOpen: true,
+    openTime: '07:00 AM',
+    closeTime: '08:00 PM',
     image:
         'https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&q=80',
     lat: 36.8508,
@@ -292,12 +338,16 @@ const restaurants = [
     id: 11,
     name: 'Baja Fish Shack',
     cuisine: 'Seafood · Mexican',
+    description:
+        'Beach-shack seafood — crispy battered fish, bright slaws, and zesty crema, Baja style.',
     rating: 4.6,
     reviews: 218,
     deliveryTime: '20–30 min',
     deliveryFee: 1.99,
     zone: 'Manar',
     isOpen: true,
+    openTime: '11:00 AM',
+    closeTime: '10:30 PM',
     image:
         'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&q=80',
     lat: 36.8324,
@@ -309,12 +359,16 @@ const restaurants = [
     id: 12,
     name: 'Truffle & Co.',
     cuisine: 'Gourmet · American',
+    description:
+        'Elevated American comfort food finished with truffle, for when you want dinner to feel like an occasion.',
     rating: 4.8,
     reviews: 389,
     deliveryTime: '35–50 min',
     deliveryFee: 3.49,
     zone: 'Tunis-Carthage Airport',
     isOpen: false,
+    openTime: '06:00 PM',
+    closeTime: '01:00 AM',
     image:
         'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&q=80',
     lat: 36.8510,

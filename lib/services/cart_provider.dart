@@ -143,12 +143,24 @@ class CartProvider extends ChangeNotifier {
   }
 
   void addItem(CartItem item) {
-    final existing = _items.indexWhere((i) => i.id == item.id);
+    final existing = _items.indexWhere(
+      (i) =>
+          i.id == item.id ||
+          (i.name == item.name &&
+              i.customizationSummary == item.customizationSummary),
+    );
     if (existing >= 0) {
-      _items[existing].quantity++;
+      _items[existing].quantity += item.quantity;
     } else {
       _items.add(item);
     }
+    notifyListeners();
+  }
+
+  void incrementItem(String id) {
+    final idx = _items.indexWhere((i) => i.id == id);
+    if (idx < 0) return;
+    _items[idx].quantity++;
     notifyListeners();
   }
 

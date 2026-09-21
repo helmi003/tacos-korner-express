@@ -1,11 +1,10 @@
-﻿import 'dart:math' as math;
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/screens/order/payment_screen.dart';
 import 'package:takos_corner_express/screens/products/product_customizer_screen.dart';
-import 'package:takos_corner_express/screens/see_all_screen.dart';
+import 'package:takos_corner_express/screens/search_screen.dart';
 import 'package:takos_corner_express/widgets/products/qty_stepper.dart';
 import 'package:takos_corner_express/services/cart_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
@@ -13,7 +12,6 @@ import 'package:takos_corner_express/widgets/global/custom_cashed_image.dart';
 import 'package:takos_corner_express/widgets/global/custom_confirmation_dialog.dart';
 import 'package:takos_corner_express/widgets/global/custom_snackbar.dart';
 import 'package:takos_corner_express/widgets/others/empty_card.dart';
-import '../../utils/enums.dart';
 
 class CartScreen extends StatefulWidget {
   static const routeName = '/Cart';
@@ -118,69 +116,106 @@ class _CartScreenState extends State<CartScreen> {
                 message: 'Your cart is empty',
                 caption: 'Browse restaurants and add items to get started.',
                 buttonText: 'Browse Food',
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        SeeAllScreen.search(type: SearchScope.products),
-                  ),
-                ),
+                onPressed: () => Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const SearchScreen())),
               ),
             )
           : SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                      vertical: 20.h,
-                    ),
-                    child: Column(
-                      children: [
-                        ...cart.items.map(
-                          (item) => _CartItemTile(
-                            item: item,
-                            onIncrement: () =>
-                                context.read<CartProvider>().addItem(item),
-                            onDecrement: () => context
-                                .read<CartProvider>()
-                                .decrementItem(item.id),
-                            onRemove: () => context
-                                .read<CartProvider>()
-                                .removeItem(item.id),
-                            onEdit: item.product != null
-                                ? () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ProductCustomizerScreen(
-                                        product: item.product!,
-                                        editCartItemId: item.id,
-                                        initialQty: item.quantity,
-                                        initialSelections: {
-                                          for (final c in item.customizations)
-                                            c.typeId: List.from(c.selected),
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                : null,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        _NoteCard(
-                          controller: _noteCtrl,
-                          onChanged: (v) =>
-                              context.read<CartProvider>().setNote(v),
-                        ),
-                        SizedBox(height: 16.h),
-                        _TipSection(cart: cart),
-                        SizedBox(height: 2.h),
-                      ],
+                  ...cart.items.map(
+                    (item) => _CartItemTile(
+                      item: item,
+                      onIncrement: () =>
+                          context.read<CartProvider>().incrementItem(item.id),
+                      onDecrement: () =>
+                          context.read<CartProvider>().decrementItem(item.id),
+                      onRemove: () =>
+                          context.read<CartProvider>().removeItem(item.id),
+                      onEdit: item.product != null
+                          ? () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ProductCustomizerScreen(
+                                  product: item.product!,
+                                  editCartItemId: item.id,
+                                  initialQty: item.quantity,
+                                  initialSelections: {
+                                    for (final c in item.customizations)
+                                      c.typeId: List.from(c.selected),
+                                  },
+                                ),
+                              ),
+                            )
+                          : null,
                     ),
                   ),
-                  _ReceiptSummary(cart: cart),
+                  SizedBox(height: 16.h),
+                  _NoteCard(
+                    controller: _noteCtrl,
+                    onChanged: (v) => context.read<CartProvider>().setNote(v),
+                  ),
                 ],
               ),
             ),
+      bottomNavigationBar: cart.items.isEmpty
+          ? null
+          : _CheckoutBar(total: cart.total),
+    );
+  }
+}
+
+// ─── Checkout Bar ─────────────────────────────────────────────────────────────
+
+class _CheckoutBar extends StatelessWidget {
+  final double total;
+  const _CheckoutBar({required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const PaymentScreen())),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 15.h),
+        margin: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1AAB8E),
+          borderRadius: BorderRadius.circular(99),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Proceed to Checkout',
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.22),
+                borderRadius: BorderRadius.circular(99),
+              ),
+              child: Text(
+                '\$${total.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -529,340 +564,4 @@ class _NoteCard extends StatelessWidget {
       ),
     );
   }
-}
-
-// ─── Tip Section ─────────────────────────────────────────────────────────────
-
-class _TipSection extends StatelessWidget {
-  final CartProvider cart;
-
-  const _TipSection({required this.cart});
-
-  static const _tipOptions = [0.0, 2.5, 5.0, 10.0];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: context.borderColor, width: 0.5),
-        boxShadow: context.shadows,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('🛵', style: TextStyle(fontSize: 28.sp)),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tip for your courier',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
-                        color: context.textColor,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      'Goes entirely to your delivery person',
-                      style: TextStyle(fontSize: 11.sp, color: textMuted),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 14.h),
-          Row(
-            children: _tipOptions.asMap().entries.map((e) {
-              final pct = e.value;
-              final isLast = e.key == _tipOptions.length - 1;
-              final isSelected = cart.tipPercent == pct;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: isLast ? 0 : 8.w),
-                  child: GestureDetector(
-                    onTap: () =>
-                        context.read<CartProvider>().setTipPercent(pct),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      padding: EdgeInsets.symmetric(vertical: 9.h),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? context.accentAmber
-                            : context.cardGrayColor,
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        pct == 0 ? '0 %' : '${pct.toStringAsFixed(1)} %',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isSelected
-                              ? Colors.white
-                              : context.textBodyColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Receipt Summary ──────────────────────────────────────────────────────────
-
-class _ReceiptSummary extends StatelessWidget {
-  final CartProvider cart;
-
-  const _ReceiptSummary({required this.cart});
-
-  @override
-  Widget build(BuildContext context) {
-    final bgColor = context.cardColor;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CustomPaint(
-          size: Size(double.infinity, 10.h),
-          painter: _ZigzagEdgePainter(color: bgColor),
-        ),
-        Container(
-          color: bgColor,
-          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 4.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Summary',
-                style: TextStyle(
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.w800,
-                  color: context.textColor,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              _ReceiptRow(label: 'Items', value: cart.subtotal),
-              _ReceiptRow(label: 'Delivery', value: cart.deliveryFee),
-              _ReceiptRow(
-                label: 'Service fee',
-                value: cart.serviceFee,
-                infoIcon: true,
-              ),
-              if (cart.tipAmount > 0)
-                _ReceiptRow(
-                  label:
-                      'Courier tip (${cart.tipPercent.toStringAsFixed(1)} %)',
-                  value: cart.tipAmount,
-                ),
-              if (cart.discount > 0)
-                _ReceiptRow(
-                  label: 'Discount (${cart.promoCode})',
-                  value: -cart.discount,
-                  valueColor: context.accentGreen,
-                ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                child: _DashedDivider(color: context.receiptDividerColor),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total to pay',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w800,
-                      color: context.textColor,
-                    ),
-                  ),
-                  Text(
-                    '\$${cart.total.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 17.sp,
-                      fontWeight: FontWeight.w800,
-                      color: primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const PaymentScreen()),
-                  ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15.h),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1AAB8E),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Proceed to Checkout',
-                          style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10.w,
-                            vertical: 3.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.22),
-                            borderRadius: BorderRadius.circular(99),
-                          ),
-                          child: Text(
-                            '\$${cart.total.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ReceiptRow extends StatelessWidget {
-  final String label;
-  final double value;
-  final Color? valueColor;
-  final bool infoIcon;
-
-  const _ReceiptRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-    this.infoIcon = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.h),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 13.sp, color: context.textBodyColor),
-          ),
-          if (infoIcon) ...[
-            SizedBox(width: 4.w),
-            Icon(SolarIconsOutline.infoCircle, size: 13.sp, color: textMuted),
-          ],
-          const Spacer(),
-          Text(
-            '${value < 0 ? '–' : ''}\$${value.abs().toStringAsFixed(3)}',
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
-              color: valueColor ?? context.textColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-class _ZigzagEdgePainter extends CustomPainter {
-  final Color color;
-  _ZigzagEdgePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    const double toothW = 12.0;
-    final path = Path();
-    path.moveTo(0, size.height);
-    double x = 0;
-    while (x < size.width + toothW) {
-      path.lineTo(x + toothW / 2, 0);
-      path.lineTo(x + toothW, size.height);
-      x += toothW;
-    }
-    path.lineTo(size.width, size.height);
-    path.close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _DashedDivider extends StatelessWidget {
-  final Color color;
-  const _DashedDivider({required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(double.infinity, 1),
-      painter: _DashedLinePainter(color: color),
-    );
-  }
-}
-
-class _DashedLinePainter extends CustomPainter {
-  final Color color;
-  _DashedLinePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1;
-    const double dashW = 6;
-    const double gapW = 4;
-    double x = 0;
-    while (x < size.width) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(math.min(x + dashW, size.width), 0),
-        paint,
-      );
-      x += dashW + gapW;
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

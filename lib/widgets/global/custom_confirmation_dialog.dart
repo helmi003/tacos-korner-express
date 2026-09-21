@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:takos_corner_express/utils/colors.dart';
+import 'package:takos_corner_express/widgets/global/button_widget.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String contentText;
@@ -29,48 +29,33 @@ class ConfirmationDialog extends StatelessWidget {
       ),
       content: Text(
         contentText,
-        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
+        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
         textAlign: TextAlign.center,
       ),
       actions: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: TextButton.styleFrom(
-                side: BorderSide(color: context.textColor, width: 1.2.w),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-              ),
-              child: Text(
+            Expanded(
+              child: ButtonWidget(
                 cancelText,
-                style: TextStyle(fontSize: 14.sp, color: context.textColor),
+                () => Navigator.of(context).pop(),
+                isTransparent: true,
+                color: context.textBodyColor,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
               ),
             ),
             SizedBox(width: 10.w),
-            TextButton(
-              onPressed: isLoading ? null : onPressed,
-              style: TextButton.styleFrom(
-                backgroundColor: isLoading
-                    ? textMuted.withValues(alpha: 0.5)
-                    : color,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            Expanded(
+              child: ButtonWidget(
+                confirmText,
+                onPressed,
+                bgColor: color,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                isLoading: isLoading,
               ),
-              child: isLoading
-                  ? LoadingAnimationWidget.staggeredDotsWave(
-                      color: textLight,
-                      size: 20.sp,
-                    )
-                  : Text(
-                      confirmText,
-                      style: TextStyle(fontSize: 14.sp, color: textLight),
-                    ),
             ),
           ],
         ),

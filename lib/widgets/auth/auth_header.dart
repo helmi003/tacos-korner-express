@@ -8,12 +8,14 @@ class AuthHeader extends StatelessWidget {
   final String subtitle;
   final VoidCallback? onTap;
   final bool? showBackButton;
+  final Widget? footer;
   const AuthHeader(
     this.gradient,
     this.title,
     this.subtitle, {
     this.onTap,
     this.showBackButton = false,
+    this.footer,
     super.key,
   });
 
@@ -72,6 +74,7 @@ class AuthHeader extends StatelessWidget {
             subtitle,
             style: TextStyle(color: Colors.white70, fontSize: 14.sp),
           ),
+          if (footer != null) ...[SizedBox(height: 16.h), footer!],
         ],
       ),
     );

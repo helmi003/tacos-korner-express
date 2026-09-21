@@ -18,7 +18,7 @@ class RestaurantsViewToggle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ViewToggleMap(
+        ViewToggleMap( 
           label: 'Cards',
           icon: SolarIconsOutline.list,
           active: value == RestaurantsView.cards,

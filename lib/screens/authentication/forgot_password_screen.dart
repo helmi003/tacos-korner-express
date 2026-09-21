@@ -16,7 +16,7 @@ import 'package:takos_corner_express/widgets/others/password_strength_bar.dart';
 import 'package:takos_corner_express/widgets/others/password_strength_criteria.dart'
     show StrengthCriteria;
 
-enum _ForgotStep { email, sent, otp, newPassword }
+enum _ForgotStep { email, otp, newPassword }
 
 class ForgotPasswordScreen extends StatefulWidget {
   static const routeName = '/ForgotPassword';
@@ -71,7 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await Future.delayed(const Duration(seconds: 1));
       if (mounted) {
         setState(() {
-          _step = _ForgotStep.sent;
+          _step = _ForgotStep.otp;
         });
         CustomSnackbar.show(
           context,
@@ -175,22 +175,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildHeader() {
     final gradient = switch (_step) {
       _ForgotStep.email => amberGradient,
-      _ForgotStep.sent => amberGradient,
       _ForgotStep.otp => greenGradient,
       _ForgotStep.newPassword => greenGradient,
     };
 
     final title = switch (_step) {
       _ForgotStep.email => 'Forgot Password? 🔑',
-      _ForgotStep.sent => 'Check Your Inbox 📧',
       _ForgotStep.otp => 'Verify Code ✉️',
       _ForgotStep.newPassword => 'New Password 🔒',
     };
 
     final subtitle = switch (_step) {
       _ForgotStep.email => "Enter your email and we'll send a reset link",
-      _ForgotStep.sent => 'We sent a code to your email address',
-      _ForgotStep.otp => 'Enter the 6-digit code we sent you',
+      _ForgotStep.otp => 'Enter the 6-digit code we sent to ${_emailCtrl.text}',
       _ForgotStep.newPassword => 'Create a strong new password',
     };
 
@@ -212,7 +209,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildStep() {
     return switch (_step) {
       _ForgotStep.email => _buildEmailStep(),
-      _ForgotStep.sent => _buildSentStep(),
       _ForgotStep.otp => _buildOtpStep(),
       _ForgotStep.newPassword => _buildNewPasswordStep(),
     };
@@ -266,68 +262,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSentStep() {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(20.r),
-        border: context.border,
-        boxShadow: context.shadows,
-      ),
-      child: Column(
-        children: [
-          SizedBox(height: 10.h),
-          Container(
-            width: 80.w,
-            height: 80.w,
-            decoration: BoxDecoration(
-              color: context.accentAmber.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(SolarIconsBold.letter, size: 38.sp, color: context.accentAmber),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Email sent!',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
-              color: context.textColor,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'We sent a 6-digit code to\n${_emailCtrl.text}',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13.sp, color: textMuted),
-          ),
-          SizedBox(height: 24.h),
-          ButtonWidget(
-            'Enter OTP Code',
-            () => setState(() => _step = _ForgotStep.otp),
-            bgColor: context.accentAmber,
-            icon: SolarIconsBold.key,
-            iconRight: true,
-          ),
-          SizedBox(height: 12.h),
-          isLoading
-              ? LoadingAnimationWidget.staggeredDotsWave(
-                  color: primaryColor,
-                  size: 20.h,
-                )
-              : TextButton(
-                  onPressed: reSendEmail,
-                  child: Text(
-                    "Didn't receive? Resend code",
-                    style: TextStyle(color: primaryColor, fontSize: 13.sp),
-                  ),
-                ),
-        ],
       ),
     );
   }

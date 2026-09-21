@@ -11,6 +11,7 @@ import 'package:takos_corner_express/services/favorites_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/global/custom_cashed_image.dart';
 import 'package:takos_corner_express/widgets/global/custom_snackbar.dart';
+import 'package:takos_corner_express/widgets/others/button_icon_widget.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -92,7 +93,9 @@ class ProductCard extends StatelessWidget {
                 Positioned(
                   top: 6.h,
                   right: 6.w,
-                  child: GestureDetector(
+                  child: ButtonIconWidget(
+                    icon: SolarIconsBold.heart,
+                    color: isFav ? danger : textLight,
                     onTap: () {
                       context.read<FavoritesProvider>().toggleProduct(
                         product.name,
@@ -105,11 +108,6 @@ class ProductCard extends StatelessWidget {
                         type: SnackbarType.info,
                       );
                     },
-                    child: Icon(
-                      SolarIconsBold.heart,
-                      size: 20.sp,
-                      color: isFav ? danger : textLight,
-                    ),
                   ),
                 ),
                 if (product.isNew)
@@ -135,6 +133,50 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
+                Positioned(
+                  bottom: 6.h,
+                  left: 6.w,
+                  right: 6.w,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => _openRestaurant(context, restaurant),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.55),
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              SolarIconsBold.shop,
+                              size: 8.sp,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 3.w),
+                            Flexible(
+                              child: Text(
+                                restaurant.name,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             Padding(
@@ -153,32 +195,6 @@ class ProductCard extends StatelessWidget {
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  GestureDetector(
-                    onTap: () => _openRestaurant(context, restaurant),
-                    child: Row(
-                      children: [
-                        Icon(
-                          SolarIconsBold.shop,
-                          size: 10.sp,
-                          color: context.textMutedColor,
-                        ),
-                        SizedBox(width: 3.w),
-                        Expanded(
-                          child: Text(
-                            '${restaurant.name} · ${restaurant.zone}',
-                            style: TextStyle(
-                              fontSize: 9.5.sp,
-                              fontWeight: FontWeight.w600,
-                              color: context.textMutedColor,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                   SizedBox(height: 6.h),

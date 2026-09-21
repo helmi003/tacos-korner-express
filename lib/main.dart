@@ -18,10 +18,11 @@ import 'package:takos_corner_express/screens/coming_soon_screen.dart';
 import 'package:takos_corner_express/screens/notifications_screen.dart';
 import 'package:takos_corner_express/screens/restaurants/restaurant_details_screen.dart';
 import 'package:takos_corner_express/screens/settings/account/change_password_screen.dart';
-import 'package:takos_corner_express/screens/settings/delivery_zone_screen.dart';
+import 'package:takos_corner_express/screens/settings/account/edit_profile_screen.dart';
 import 'package:takos_corner_express/screens/settings/notification_preferences_screen.dart';
 import 'package:takos_corner_express/screens/settings/orders/favorite_screen.dart';
 import 'package:takos_corner_express/screens/settings/orders/orders_screen.dart';
+import 'package:takos_corner_express/screens/settings/orders/saved_combos_screen.dart';
 import 'package:takos_corner_express/screens/settings/settings_screen.dart';
 import 'package:takos_corner_express/screens/settings/support/about_screen.dart';
 import 'package:takos_corner_express/screens/settings/support/help_screen.dart';
@@ -31,6 +32,7 @@ import 'package:takos_corner_express/services/cart_provider.dart';
 import 'package:takos_corner_express/services/configuration_manager.dart';
 import 'package:takos_corner_express/services/favorites_provider.dart';
 import 'package:takos_corner_express/services/language_provider.dart';
+import 'package:takos_corner_express/services/reviews_provider.dart';
 import 'package:takos_corner_express/services/theme_provider.dart';
 import 'package:takos_corner_express/services/user_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
@@ -91,6 +93,7 @@ void main() {
             ChangeNotifierProvider(create: (_) => CartProvider()),
             ChangeNotifierProvider(create: (_) => UserProvider()),
             ChangeNotifierProvider(create: (_) => FavoritesProvider()),
+            ChangeNotifierProvider(create: (_) => ReviewsProvider()),
           ],
           child: const MyApp(),
         ),
@@ -151,15 +154,17 @@ class MyApp extends StatelessWidget {
                     const NotificationPreferencesScreen(),
                 ChangePasswordScreen.routeName: (context) =>
                     const ChangePasswordScreen(),
+                EditProfileScreen.routeName: (context) =>
+                    const EditProfileScreen(),
                 OrdersScreen.routeName: (context) => const OrdersScreen(),
                 FavouritesScreen.routeName: (context) =>
                     const FavouritesScreen(),
+                SavedCombosScreen.routeName: (context) =>
+                    const SavedCombosScreen(),
                 NotificationsScreen.routeName: (context) =>
                     const NotificationsScreen(),
                 HelpScreen.routeName: (context) => const HelpScreen(),
                 AboutScreen.routeName: (context) => const AboutScreen(),
-                DeliveryZoneScreen.routeName: (context) =>
-                    const DeliveryZoneScreen(),
                 SettingsScreen.routeName: (context) => const SettingsScreen(),
                 ComingSoonScreen.routeName: (context) {
                   final title =

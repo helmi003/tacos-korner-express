@@ -6,9 +6,9 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/helpers/password_helper.dart';
 import 'package:takos_corner_express/screens/authentication/login_screen.dart';
+import 'package:takos_corner_express/screens/authentication/verify_account_screen.dart';
 import 'package:takos_corner_express/screens/settings/legal/privacy_policy_screen.dart';
 import 'package:takos_corner_express/screens/settings/legal/terms_screen.dart';
-import 'package:takos_corner_express/screens/tabs/tab_screen.dart';
 import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/auth/auth_header.dart';
 import 'package:takos_corner_express/widgets/global/button_widget.dart';
@@ -75,7 +75,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
     setState(() => _loading = false);
-    Navigator.pushReplacementNamed(context, TabScreen.routeName);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VerifyAccountScreen(
+          firstName: _firstNameCtrl.text.trim(),
+          lastName: _lastNameCtrl.text.trim(),
+          email: _emailCtrl.text.trim(),
+          phone: _phoneCtrl.text.trim(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -168,6 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           _phoneCtrl,
                           isRequired: true,
                           onInputChanged: (p) => _phone = p,
+                          withBG: true,
                         ),
                         SizedBox(height: 14.h),
                         CustomTextfield(

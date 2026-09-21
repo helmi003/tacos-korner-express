@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/data/orders_data.dart';
 import 'package:takos_corner_express/utils/colors.dart';
+import 'package:takos_corner_express/utils/enums.dart';
 import 'package:takos_corner_express/widgets/global/custom_back_appbar.dart';
 import 'package:takos_corner_express/widgets/global/custom_cashed_image.dart';
 import 'package:takos_corner_express/widgets/global/custom_not_found_text.dart';
+import 'package:takos_corner_express/widgets/orders/orders_view_toggle.dart';
 
 class OrdersScreen extends StatefulWidget {
   static const routeName = '/OrdersScreen';
@@ -16,11 +18,12 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  bool _showActive = true;
+  OrdersView _view = OrdersView.active;
 
   @override
   Widget build(BuildContext context) {
-    final list = orders.where((o) => o.isActive == _showActive).toList();
+    final showActive = _view == OrdersView.active;
+    final list = orders.where((o) => o.isActive == showActive).toList();
 
     return Scaffold(
       backgroundColor: context.backgroundColor,
@@ -35,11 +38,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 color: context.cardGrayColor,
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: Row(
-                children: [
-                  _tabBtn('Active', true),
-                  _tabBtn('Past Orders', false),
-                ],
+              child: OrdersViewToggle(
+                value: _view,
+                onChanged: (v) => setState(() => _view = v),
               ),
             ),
           ),
@@ -54,31 +55,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _tabBtn(String label, bool active) {
-    final selected = _showActive == active;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _showActive = active),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          decoration: BoxDecoration(
-            color: selected ? primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: selected ? Colors.white : context.textMutedColor,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -116,15 +92,26 @@ class _OrderTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: CustomCashedImage(
-              order.restaurantImage,
+          if (order.items.length == 1)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: CustomCashedImage(
+                order.items.first.imageUrl,
+                width: 56.w,
+                height: 56.w,
+                fit: BoxFit.cover,
+              ),
+            )
+          else
+            Container(
               width: 56.w,
               height: 56.w,
-              fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                color: primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(SolarIconsBold.bag2, color: primaryColor, size: 24.sp),
             ),
-          ),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(

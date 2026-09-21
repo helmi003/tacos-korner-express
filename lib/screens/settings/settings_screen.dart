@@ -5,13 +5,15 @@ import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/screens/authentication/login_screen.dart';
 import 'package:takos_corner_express/screens/settings/account/change_password_screen.dart';
+import 'package:takos_corner_express/screens/settings/account/edit_profile_screen.dart';
 import 'package:takos_corner_express/screens/coming_soon_screen.dart';
-import 'package:takos_corner_express/screens/settings/delivery_zone_screen.dart';
 import 'package:takos_corner_express/screens/settings/notification_preferences_screen.dart';
 import 'package:takos_corner_express/screens/settings/orders/favorite_screen.dart';
+import 'package:takos_corner_express/screens/settings/orders/saved_combos_screen.dart';
 import 'package:takos_corner_express/screens/settings/support/about_screen.dart';
 import 'package:takos_corner_express/screens/settings/support/help_screen.dart';
 import 'package:takos_corner_express/screens/settings/orders/orders_screen.dart';
+import 'package:takos_corner_express/services/cart_provider.dart';
 import 'package:takos_corner_express/services/favorites_provider.dart';
 import 'package:takos_corner_express/services/theme_provider.dart';
 import 'package:takos_corner_express/services/user_provider.dart';
@@ -29,6 +31,7 @@ class SettingsScreen extends StatelessWidget {
     final user = context.watch<UserProvider>();
     final isDark = context.watch<ThemeProvider>().isDark;
     final favoritesCount = context.watch<FavoritesProvider>().count;
+    final savedCombosCount = context.watch<CartProvider>().savedCombos.length;
 
     return Scaffold(
       appBar: customBackAppBar(context, "Settings", ""),
@@ -39,12 +42,8 @@ class SettingsScreen extends StatelessWidget {
               _MenuItemTile(
                 icon: SolarIconsOutline.penNewSquare,
                 label: 'Edit Profile',
-                onTap: () => _openComingSoon(context, 'Edit Profile'),
-              ),
-              _MenuItemTile(
-                icon: SolarIconsOutline.mapPoint,
-                label: 'My Addresses',
-                onTap: () => _openComingSoon(context, 'My Addresses'),
+                onTap: () =>
+                    Navigator.of(context).pushNamed(EditProfileScreen.routeName),
               ),
               _MenuItemTile(
                 icon: SolarIconsOutline.lockPassword,
@@ -69,6 +68,14 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () =>
                     Navigator.of(context).pushNamed(FavouritesScreen.routeName),
               ),
+              _MenuItemTile(
+                icon: SolarIconsOutline.bookmark,
+                label: 'Saved Combos',
+                badge: savedCombosCount > 0 ? '$savedCombosCount' : null,
+                onTap: () => Navigator.of(
+                  context,
+                ).pushNamed(SavedCombosScreen.routeName),
+              ),
             ]),
             _buildSection(context, 'Preferences', [
               _MenuItemTile(
@@ -90,13 +97,6 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () => Navigator.of(
                   context,
                 ).pushNamed(NotificationPreferencesScreen.routeName),
-              ),
-              _MenuItemTile(
-                icon: SolarIconsOutline.mapPoint,
-                label: 'Delivery Zones',
-                onTap: () => Navigator.of(
-                  context,
-                ).pushNamed(DeliveryZoneScreen.routeName),
               ),
             ]),
             _buildSection(context, 'Support', [

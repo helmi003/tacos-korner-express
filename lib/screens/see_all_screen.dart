@@ -95,27 +95,15 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
   }
 
   Widget _buildListMode(BuildContext context) {
-    final items = widget.items!;
     return Scaffold(
       backgroundColor: context.backgroundColor,
       appBar: customBackAppBar(context, widget.title!, ''),
-      body: items.isEmpty
-          ? const EmptyCard(
-              icon: SolarIconsOutline.cardSearch,
-              message: 'Nothing here yet.',
-            )
-          : GridView.builder(
-              padding: EdgeInsets.all(20.w),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10.w,
-                mainAxisSpacing: 10.w,
-                mainAxisExtent: 200.h,
-              ),
-              itemCount: items.length,
-              itemBuilder: (context, index) =>
-                  ProductCard(product: items[index]),
-            ),
+      body: _buildProductsGrid(
+        widget.items!,
+        padding: EdgeInsets.all(20.w),
+        emptyMessage: 'Nothing here yet.',
+        emptyCaption: null,
+      ),
     );
   }
 
@@ -193,17 +181,35 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
       category: _selectedCategory,
       filters: _filters,
     );
+    return _buildProductsGrid(results, shrinkWrap: true);
+  }
+
+  Widget _buildProductsGrid(
+    List<ProductModel> results, {
+    EdgeInsetsGeometry? padding,
+    bool shrinkWrap = false,
+    String emptyMessage = "No results found.",
+    String? emptyCaption = "We couldn't find any results for your search.",
+  }) {
     if (results.isEmpty) {
-      return const EmptyCard(
+      return EmptyCard(
         icon: SolarIconsOutline.cardSearch,
-        message: "No results found.",
-        caption: "We couldn't find any results for your search.",
+        message: emptyMessage,
+        caption: emptyCaption,
       );
     }
-    return Wrap(
-      spacing: 10.w,
-      runSpacing: 10.h,
-      children: results.map((p) => ProductCard(product: p)).toList(),
+    return GridView.builder(
+      padding: padding,
+      shrinkWrap: shrinkWrap,
+      physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10.w,
+        mainAxisSpacing: 10.w,
+        mainAxisExtent: 200.h,
+      ),
+      itemCount: results.length,
+      itemBuilder: (context, index) => ProductCard(product: results[index]),
     );
   }
 

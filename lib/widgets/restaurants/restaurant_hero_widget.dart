@@ -7,14 +7,14 @@ import 'package:takos_corner_express/utils/colors.dart';
 import 'package:takos_corner_express/widgets/global/custom_cashed_image.dart';
 import 'package:takos_corner_express/widgets/others/button_icon_widget.dart';
 
-class ProductHeroWidget extends StatelessWidget {
-  final ProductModel product;
+class RestaurantHeroWidget extends StatelessWidget {
+  final RestaurantModel restaurant;
   final bool isFav;
   final VoidCallback onFavToggle;
 
-  const ProductHeroWidget({
+  const RestaurantHeroWidget({
     super.key,
-    required this.product,
+    required this.restaurant,
     required this.isFav,
     required this.onFavToggle,
   });
@@ -26,7 +26,7 @@ class ProductHeroWidget extends StatelessWidget {
       child: Stack(
         children: [
           CustomCashedImage(
-            product.image,
+            restaurant.image,
             width: double.infinity,
             height: 260.h,
             fit: BoxFit.cover,
@@ -50,7 +50,7 @@ class ProductHeroWidget extends StatelessWidget {
                       icon: SolarIconsBold.heart,
                       size: 18,
                       onTap: onFavToggle,
-                      color: isFav ? danger : null,
+                      color: isFav ? danger : textLight,
                     ),
                     SizedBox(width: 8.w),
                     ButtonIconWidget(
@@ -59,7 +59,7 @@ class ProductHeroWidget extends StatelessWidget {
                       onTap: () => SharePlus.instance.share(
                         ShareParams(
                           text:
-                              'Check out ${product.name} on Takos Korner Express!',
+                              'Check out ${restaurant.name} on Takos Korner Express!',
                         ),
                       ),
                     ),
@@ -68,6 +68,26 @@ class ProductHeroWidget extends StatelessWidget {
               ],
             ),
           ),
+          if (!restaurant.isOpen)
+            Positioned(
+              bottom: 12.h,
+              left: 16.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Text(
+                  'Closed',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

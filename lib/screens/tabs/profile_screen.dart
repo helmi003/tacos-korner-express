@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
 import 'package:takos_corner_express/screens/authentication/login_screen.dart';
+import 'package:takos_corner_express/screens/settings/account/edit_profile_screen.dart';
 import 'package:takos_corner_express/screens/settings/orders/favorite_screen.dart';
 import 'package:takos_corner_express/services/favorites_provider.dart';
 import 'package:takos_corner_express/services/user_provider.dart';
 import 'package:takos_corner_express/utils/colors.dart';
+import 'package:takos_corner_express/widgets/global/button_widget.dart';
 import 'package:takos_corner_express/widgets/global/custom_appbar.dart';
 import 'package:takos_corner_express/widgets/others/user_avatar.dart';
 
@@ -18,6 +20,13 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>();
 
+    if (!user.isLoggedIn) {
+      return Scaffold(
+        appBar: customAppBar(context),
+        body: _buildGuestState(context),
+      );
+    }
+
     return Scaffold(
       appBar: customAppBar(context),
       body: SingleChildScrollView(
@@ -26,6 +35,59 @@ class ProfileScreen extends StatelessWidget {
             _buildProfileHeader(context, user),
             SizedBox(height: 8.h),
             _buildStatsRow(context, user),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGuestState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 88.w,
+              height: 88.w,
+              decoration: BoxDecoration(
+                color: primaryColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                SolarIconsBold.userCircle,
+                size: 44.sp,
+                color: primaryColor,
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              "You're browsing as a guest",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w800,
+                color: context.textColor,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Sign in to place orders, save favourites, track your order history, and get a better experience overall.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: textMuted,
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            ButtonWidget(
+              'Sign In',
+              () => Navigator.pushNamed(context, LoginScreen.routeName),
+              icon: SolarIconsOutline.login,
+              iconRight: true,
+            ),
           ],
         ),
       ),
@@ -43,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
       child: Row(
         children: [
           UserAvatar(
-            fullName: user.isLoggedIn ? (user.name ?? 'Guest') : 'Guest',
+            fullName: user.name ?? 'User',
             userPhotoUrl: user.avatarUrl,
             size: 60,
           ),
@@ -53,7 +115,7 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  user.isLoggedIn ? (user.name ?? 'User') : 'Guest User',
+                  user.name ?? 'User',
                   style: TextStyle(
                     color: textLight,
                     fontSize: 17.sp,
@@ -62,43 +124,21 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 3.h),
                 Text(
-                  user.isLoggedIn ? (user.email ?? '') : 'Sign in to order',
+                  user.email ?? '',
                   style: TextStyle(color: textMuted, fontSize: 12.sp),
                 ),
-                if (!user.isLoggedIn) ...[
-                  SizedBox(height: 8.h),
-                  GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, LoginScreen.routeName),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 14.w,
-                        vertical: 6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
-          if (user.isLoggedIn)
-            Icon(
+          GestureDetector(
+            onTap: () =>
+                Navigator.pushNamed(context, EditProfileScreen.routeName),
+            child: Icon(
               SolarIconsOutline.penNewSquare,
               color: Colors.white70,
               size: 20.sp,
             ),
+          ),
         ],
       ),
     );
